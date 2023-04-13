@@ -1,27 +1,26 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Container, MantineProvider, Text } from '@mantine/core';
+import { Header } from './components/header/Header';
 
-function App() {
+export default function App() {
+	// TODO TMP DATA
+	const user = {
+		name: 'Jonny Bravo',
+		image: 'https://cdn.drawception.com/drawings/YsR2oy7ctw.png',
+	};
+
+	const tabs = ['Home', 'Free Drop', 'Items'];
+
 	return (
-		<div className='App'>
-			<header className='App-header'>
-				<img src={logo} className='App-logo' alt='logo' />
-				<p>
-					Edit <code>src/App.tsx</code> and save to reload.
-				</p>
-				<a
-					className='App-link'
-					href='https://reactjs.org'
-					target='_blank'
-					rel='noopener noreferrer'
-				>
-					Learn React
-				</a>
-			</header>
-		</div>
+		<MantineProvider
+			withGlobalStyles
+			withNormalizeCSS
+			theme={{ colorScheme: 'dark' }}
+		>
+			<Header user={user} tabs={tabs} />
+			<Container>
+				<Text>Amazing shop with drop functionality 🚀</Text>
+			</Container>
+		</MantineProvider>
 	);
 }
-
-export default App;
 
