@@ -1,5 +1,6 @@
 {
 	"name": "e-commerce",
+	"proxy": "http://localhost:4000",
 	"version": "0.1.0",
 	"private": true,
 	"dependencies": {
@@ -12,6 +13,7 @@
 		"@mantine/notifications": "^6.0.7",
 		"@mantine/nprogress": "^6.0.7",
 		"@mantine/prism": "^6.0.7",
+		"@reduxjs/toolkit": "^1.9.5",
 		"@tabler/icons-react": "^2.15.0",
 		"@testing-library/jest-dom": "^5.16.5",
 		"@testing-library/react": "^13.4.0",
@@ -22,6 +24,7 @@
 		"@types/react-dom": "^18.0.11",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
+		"react-redux": "^8.0.5",
 		"react-router-dom": "^6.9.0",
 		"react-scripts": "^5.0.1",
 		"typescript": "^5.0.4",

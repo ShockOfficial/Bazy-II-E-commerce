@@ -1,13 +1,12 @@
-import { Container, MantineProvider, Text } from '@mantine/core';
+import { MantineProvider } from '@mantine/core';
 import { Header } from './components/header/Header';
+import { Signup } from './components/signup/Signup';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { Login } from './components/login/Login';
+import { Home } from './components/home/Home';
 
 export default function App() {
 	// TODO TMP DATA
-	const user = {
-		name: 'Jonny Bravo',
-		image: 'https://cdn.drawception.com/drawings/YsR2oy7ctw.png',
-	};
-
 	const tabs = ['Home', 'Free Drop', 'Items'];
 
 	return (
@@ -16,10 +15,14 @@ export default function App() {
 			withNormalizeCSS
 			theme={{ colorScheme: 'dark' }}
 		>
-			<Header user={user} tabs={tabs} />
-			<Container>
-				<Text>Amazing shop with drop functionality 🚀</Text>
-			</Container>
+			<BrowserRouter>
+				<Header tabs={tabs} />
+				<Routes>
+					<Route path='/' element={<Home />} />
+					<Route path='/login' element={<Login />} />
+					<Route path='/signup' element={<Signup />} />
+				</Routes>
+			</BrowserRouter>
 		</MantineProvider>
 	);
 }
