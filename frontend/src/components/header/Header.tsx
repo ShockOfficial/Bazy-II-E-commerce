@@ -16,6 +16,8 @@ import {
 } from '@tabler/icons-react';
 import { MantineLogo } from '@mantine/ds';
 import { useStyles } from './styles';
+import { useLogout } from '../../hooks/useLogout';
+import { useAuthContext } from '../../hooks/useAuthContext';
 
 interface HeaderProps {
 	tabs: string[];
@@ -25,6 +27,13 @@ export function Header({ tabs }: HeaderProps) {
 	const { classes, cx } = useStyles();
 	const [opened, { toggle }] = useDisclosure(false);
 	const [userMenuOpened, setUserMenuOpened] = useState(false);
+
+	const { user } = useAuthContext();
+	const { logout } = useLogout();
+
+	const onLogout = () => {
+		logout();
+	}
 
 	const items = tabs.map((tab) => (
 		<Tabs.Tab value={tab} key={tab}>
@@ -61,14 +70,14 @@ export function Header({ tabs }: HeaderProps) {
 							>
 								<Group spacing={7}>
 									<Text weight={500} size='sm' sx={{ lineHeight: 1 }} mr={3}>
-										{/* {user ? user.email : `user's email`} */}
+										{user ? user.email : `user's email`}
 									</Text>
 									<IconChevronDown size={rem(12)} stroke={1.5} />
 								</Group>
 							</UnstyledButton>
 						</Menu.Target>
 						<Menu.Dropdown>
-							<Menu.Item icon={<IconLogout size='0.9rem' stroke={1.5} />}>
+							<Menu.Item onClick={onLogout} icon={<IconLogout size='0.9rem' stroke={1.5} />}>
 								Logout
 							</Menu.Item>
 						</Menu.Dropdown>

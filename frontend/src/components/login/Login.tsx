@@ -9,15 +9,31 @@ import {
     Button,
     Loader
 } from '@mantine/core';
-import { FormEvent, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useLogin } from '../../hooks/useLogin';
 
 export function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [error, setError] = useState(false);
+    const { login, isLoading, error: errorMessage } = useLogin();
+
+    useEffect(() => {
+        if (errorMessage) {
+            setError(true);
+        }
+    }, [errorMessage]);
 
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+        login(email, password);
+    }
+
+    const handleInput = () => {
+        if (error) {
+            setError(false);
+        }
     }
 
     return (
@@ -37,6 +53,8 @@ export function Login() {
                         required
                         onChange={(e) => setEmail(e.target.value)}
                         value={email}
+                        error={error}
+                        onInput={handleInput}
                     />
                     <PasswordInput
                         label="Password"
@@ -44,18 +62,20 @@ export function Login() {
                         required mt="md"
                         onChange={(e) => setPassword(e.target.value)}
                         value={password}
+                        error={error}
+                        onInput={handleInput}
                     />
                     <Button fullWidth mt="xl" type="submit">
                         Log in
                     </Button>
 
                     <Center mt="xl">
-                        {/* {isLoading && <Loader color='indigo' />}
+                        {isLoading && <Loader color='indigo' />}
                         {errorMessage && (
                             <Text color="red" size="xs" >
                                 {errorMessage}
                             </Text>
-                        )} */}
+                        )}
                     </Center>
                 </form>
             </Paper>
