@@ -9,34 +9,15 @@ import {
     Loader,
     Button,
 } from '@mantine/core';
-import { FormEvent, useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../../redux/hooks';
-import { reset, signup } from '../../redux/features/user/authSlice';
+import { FormEvent, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 export function Signup() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    const { user, isLoading, isSuccess, error } = useAppSelector((state) => state.user)
-    const dispatch = useAppDispatch();
-    const navigate = useNavigate();
-
-    useEffect(() => {
-        if (error) {
-            console.log(error);
-        }
-
-        if (isSuccess || user) {
-            navigate('/');
-        }
-
-        dispatch(reset());
-    }, [user, isSuccess, error, navigate, dispatch]);
-
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        dispatch(signup({ email, password }));
     }
 
     return (
@@ -69,7 +50,12 @@ export function Signup() {
                     </Button>
 
                     <Center mt="xl">
-                        {isLoading && <Loader color='indigo' />}
+                        {/* {isLoading && <Loader color='indigo' />}
+                        {errorMessage && (
+                            <Text color="red" size="xs" >
+                                {errorMessage}
+                            </Text>
+                        )} */}
                     </Center>
                 </form>
             </Paper>

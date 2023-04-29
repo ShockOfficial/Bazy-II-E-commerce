@@ -16,9 +16,6 @@ import {
 } from '@tabler/icons-react';
 import { MantineLogo } from '@mantine/ds';
 import { useStyles } from './styles';
-import { useAppDispatch, useAppSelector } from '../../redux/hooks';
-import { useNavigate } from 'react-router-dom';
-import { logout, reset } from '../../redux/features/user/authSlice';
 
 interface HeaderProps {
 	tabs: string[];
@@ -28,19 +25,6 @@ export function Header({ tabs }: HeaderProps) {
 	const { classes, cx } = useStyles();
 	const [opened, { toggle }] = useDisclosure(false);
 	const [userMenuOpened, setUserMenuOpened] = useState(false);
-
-	const { user } = useAppSelector((state) => state.user);
-	const dispatch = useAppDispatch();
-	const navigate = useNavigate();
-
-	const onLogout = () => {
-		// then method so it doesn't redirect back to home page
-		dispatch(logout())
-			.then(() => {
-				dispatch(reset());
-				navigate('/signup');
-			});
-	}
 
 	const items = tabs.map((tab) => (
 		<Tabs.Tab value={tab} key={tab}>
@@ -77,14 +61,14 @@ export function Header({ tabs }: HeaderProps) {
 							>
 								<Group spacing={7}>
 									<Text weight={500} size='sm' sx={{ lineHeight: 1 }} mr={3}>
-										{user ? user.email : `user's email`}
+										{/* {user ? user.email : `user's email`} */}
 									</Text>
 									<IconChevronDown size={rem(12)} stroke={1.5} />
 								</Group>
 							</UnstyledButton>
 						</Menu.Target>
 						<Menu.Dropdown>
-							<Menu.Item onClick={onLogout} icon={<IconLogout size='0.9rem' stroke={1.5} />}>
+							<Menu.Item icon={<IconLogout size='0.9rem' stroke={1.5} />}>
 								Logout
 							</Menu.Item>
 						</Menu.Dropdown>
