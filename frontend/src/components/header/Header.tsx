@@ -10,14 +10,13 @@ import {
 	rem,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import {
-	IconLogout,
-	IconChevronDown,
-} from '@tabler/icons-react';
+import { IconLogout, IconChevronDown } from '@tabler/icons-react';
 import { MantineLogo } from '@mantine/ds';
 import { useStyles } from './styles';
 import { useLogout } from '../../hooks/useLogout';
 import { useAuthContext } from '../../hooks/useAuthContext';
+import { useNavigate } from 'react-router-dom';
+import { AppRoutes } from '../../Routes/routes';
 
 interface HeaderProps {
 	tabs: string[];
@@ -27,13 +26,15 @@ export function Header({ tabs }: HeaderProps) {
 	const { classes, cx } = useStyles();
 	const [opened, { toggle }] = useDisclosure(false);
 	const [userMenuOpened, setUserMenuOpened] = useState(false);
+	const navigate = useNavigate();
 
 	const { user } = useAuthContext();
 	const { logout } = useLogout();
 
 	const onLogout = () => {
 		logout();
-	}
+		navigate(AppRoutes.LOGIN);
+	};
 
 	const items = tabs.map((tab) => (
 		<Tabs.Tab value={tab} key={tab}>
@@ -77,7 +78,10 @@ export function Header({ tabs }: HeaderProps) {
 							</UnstyledButton>
 						</Menu.Target>
 						<Menu.Dropdown>
-							<Menu.Item onClick={onLogout} icon={<IconLogout size='0.9rem' stroke={1.5} />}>
+							<Menu.Item
+								onClick={onLogout}
+								icon={<IconLogout size='0.9rem' stroke={1.5} />}
+							>
 								Logout
 							</Menu.Item>
 						</Menu.Dropdown>
