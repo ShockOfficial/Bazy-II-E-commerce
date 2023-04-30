@@ -1,6 +1,7 @@
 export const AppRoutes = {
-	HOME: '/',
-	LOGIN: '/login',
-	SIGNUP: '/signup',
-	WILDCARD: '*',
+  HOME: "/",
+  PRODUCT: "/:_id",
+  LOGIN: "/login",
+  SIGNUP: "/signup",
+  WILDCARD: "*",
 };
