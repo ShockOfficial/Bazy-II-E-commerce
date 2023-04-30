@@ -1,59 +1,68 @@
-import { ReactNode, Reducer, createContext, useEffect, useReducer } from "react";
+import {
+	ReactNode,
+	Reducer,
+	createContext,
+	useEffect,
+	useReducer,
+} from 'react';
 
 interface User {
-    email: string,
-    token: string
+	email: string;
+	token: string;
 }
 
 interface AuthState {
-    user?: User | null
+	user?: User | null;
 }
 
 interface AuthContextProps extends AuthState {
-    dispatch?: ({ type }: { type: string; payload?: User }) => void;
+	dispatch?: ({ type }: { type: string; payload?: User }) => void;
 }
 
 type AuthContextProviderProps = {
-    children: ReactNode;
+	children: ReactNode;
 };
 
 type AuthAction = {
-    type: string;
-    payload?: User;
+	type: string;
+	payload?: User;
 };
 
 export const AuthContext = createContext<AuthContextProps>({
-    user: null,
+	user: null,
 });
 
-const authReducer: Reducer<AuthState, AuthAction> = (state: AuthState, action: AuthAction) => {
-    switch (action.type) {
-        case 'LOGIN':
-            return { user: action.payload };
-        case 'LOGOUT':
-            return { user: null };
-        default:
-            return state;
-    }
-}
+const authReducer: Reducer<AuthState, AuthAction> = (
+	state: AuthState,
+	action: AuthAction,
+) => {
+	switch (action.type) {
+		case 'LOGIN':
+			return { user: action.payload };
+		case 'LOGOUT':
+			return { user: null };
+		default:
+			return state;
+	}
+};
 
 export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
-    const [state, dispatch] = useReducer(authReducer, { user: null });
+	const [state, dispatch] = useReducer(authReducer, { user: null });
 
-    useEffect(() => {
-        const userJSON = localStorage.getItem('user');
-        const user = userJSON ? JSON.parse(userJSON) : null;
+	useEffect(() => {
+		const userJSON = localStorage.getItem('user');
+		const user = userJSON ? JSON.parse(userJSON) : null;
 
-        if (user) {
-            dispatch({ type: 'LOGIN', payload: user });
-        }
-    }, []);
+		if (user) {
+			dispatch({ type: 'LOGIN', payload: user });
+		}
+	}, []);
 
-    console.log("Auth context state: ", state);
+	console.log('Auth context state: ', state);
 
-    return (
-        <AuthContext.Provider value={{ ...state, dispatch }}>
-            {children}
-        </AuthContext.Provider>
-    );
-}
+	return (
+		<AuthContext.Provider value={{ ...state, dispatch }}>
+			{children}
+		</AuthContext.Provider>
+	);
+};
