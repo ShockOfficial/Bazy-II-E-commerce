@@ -1,88 +1,48 @@
-import {
-  Grid,
-  Card,
-  Image,
-  Text,
-  Container,
-  Space,
-  Loader,
-  Flex,
-} from "@mantine/core";
-import { useStyles } from "./styles";
-import { useCollection } from "../../hooks/useCollection";
-import { useNavigate } from "react-router-dom";
+import { Grid, Text, Container, Space, Loader, Flex } from '@mantine/core';
+import { useCollection } from '../../hooks/useCollection';
+import { Product } from '../../components/Product/Product';
 
 export function Home() {
-  const { classes } = useStyles();
-  const navigate = useNavigate();
-  const { documents: products, isLoading, error } = useCollection("products");
+	const { documents: products, isLoading, error } = useCollection('products');
 
-  const handleClick = (_id: string) => {
-    navigate(`/${_id}`);
-  };
+	const renderContent = () => {
+		if (error) {
+			return (
+				<Flex justify='center'>
+					<Text fz='sm' c='red' mt={30}>
+						{error}
+					</Text>
+				</Flex>
+			);
+		}
 
-  return (
-    <Container size="md">
-      <Space h="xl"></Space>
-      {products && (
-        <Grid
-          justify="center"
-          gutter={5}
-          gutterXs="md"
-          gutterMd="xl"
-          gutterXl={50}
-        >
-          {products.map((product) => (
-            <Grid.Col
-              key={product._id}
-              md={4}
-              sm={6}
-              xs={8}
-              className={classes.card}
-            >
-              <Card
-                onClick={() => handleClick(product._id)}
-                shadow="sm"
-                padding="lg"
-                radius="md"
-                withBorder
-              >
-                <Card.Section>
-                  <Image
-                    src={product.imageUrls[0]}
-                    height={320}
-                    alt="Norway"
-                    fit="cover"
-                  />
-                  <div className={classes.description}>
-                    <Text size="lg" weight={700}>
-                      {product.brand}
-                    </Text>
-                    <Text>{product.name}</Text>
-                    <Text size="sm" weight={700}>
-                      {product.price} zł
-                    </Text>
-                  </div>
-                </Card.Section>
-              </Card>
-            </Grid.Col>
-          ))}
-        </Grid>
-      )}
+		if (isLoading) {
+			return (
+				<Flex justify='center'>
+					<Loader color='indigo' mt={30} />
+				</Flex>
+			);
+		}
 
-      {isLoading && (
-        <Flex justify="center">
-          <Loader color="indigo" mt={30} />
-        </Flex>
-      )}
+		return (
+			<Grid
+				justify='center'
+				gutter={5}
+				gutterXs='md'
+				gutterMd='xl'
+				gutterXl={50}
+			>
+				{products.map((product) => (
+					<Product product={product} key={product._id} />
+				))}
+			</Grid>
+		);
+	};
 
-      {error && (
-        <Flex justify="center">
-          <Text fz="sm" c="red" mt={30}>
-            {error}
-          </Text>
-        </Flex>
-      )}
-    </Container>
-  );
+	return (
+		<Container size='md'>
+			<Space h='xl'></Space>
+			{renderContent()}
+		</Container>
+	);
 }

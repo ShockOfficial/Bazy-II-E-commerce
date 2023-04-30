@@ -19,17 +19,27 @@ export const useCollection = (url: string): useCollectionReturn => {
             setIsLoading(true);
             setError(null);
 
-            const response = await fetch(url, { signal });
-            const json = await response.json();
+            try {
+                const response = await fetch(url, { signal });
+                const json = await response.json();
 
-            if (!response.ok) {
-                setError(json.error);
+                if (!response.ok) {
+                    setError(json.error);
+                }
+                else {
+                    setDocuments(json);
+                    setError(null);
+                }
+            } catch (err: any) {
+                if (err.name === "AbortError") {
+                    console.log("Request aborted");
+                }
+                else {
+                    console.log("Error occured", err);
+                    setError(err.message);
+                }
             }
-            else {
-                setDocuments(json);
-                setError(null);
-            }
-
+            
             setIsLoading(false);
         }
 
