@@ -1,50 +1,48 @@
-import {
-	Container,
-	Grid,
-	SimpleGrid,
-	Skeleton,
-	useMantineTheme,
-	rem,
-} from '@mantine/core';
-
-const PRIMARY_COL_HEIGHT = rem(300);
+import { Grid, Text, Container, Space, Loader, Flex } from '@mantine/core';
+import { useCollection } from '../../hooks/useCollection';
+import { Product } from '../../components/Product/Product';
 
 export function Home() {
-	const theme = useMantineTheme();
-	const SECONDARY_COL_HEIGHT = `calc(${PRIMARY_COL_HEIGHT} / 2 - ${theme.spacing.md} / 2)`;
+	const { documents: products, isLoading, error } = useCollection('products');
+
+	const renderContent = () => {
+		if (error) {
+			return (
+				<Flex justify='center'>
+					<Text fz='sm' c='red' mt={30}>
+						{error}
+					</Text>
+				</Flex>
+			);
+		}
+
+		if (isLoading) {
+			return (
+				<Flex justify='center'>
+					<Loader color='indigo' mt={30} />
+				</Flex>
+			);
+		}
+
+		return (
+			<Grid
+				justify='center'
+				gutter={5}
+				gutterXs='md'
+				gutterMd='xl'
+				gutterXl={50}
+			>
+				{products.map((product) => (
+					<Product product={product} key={product._id} />
+				))}
+			</Grid>
+		);
+	};
 
 	return (
-		<Container my='md'>
-			<SimpleGrid
-				cols={2}
-				spacing='md'
-				breakpoints={[{ maxWidth: 'sm', cols: 1 }]}
-			>
-				<Skeleton height={PRIMARY_COL_HEIGHT} radius='md' animate={true} />
-				<Grid gutter='md'>
-					<Grid.Col>
-						<Skeleton
-							height={SECONDARY_COL_HEIGHT}
-							radius='md'
-							animate={true}
-						/>
-					</Grid.Col>
-					<Grid.Col span={6}>
-						<Skeleton
-							height={SECONDARY_COL_HEIGHT}
-							radius='md'
-							animate={true}
-						/>
-					</Grid.Col>
-					<Grid.Col span={6}>
-						<Skeleton
-							height={SECONDARY_COL_HEIGHT}
-							radius='md'
-							animate={true}
-						/>
-					</Grid.Col>
-				</Grid>
-			</SimpleGrid>
+		<Container size='md'>
+			<Space h='xl'></Space>
+			{renderContent()}
 		</Container>
 	);
 }

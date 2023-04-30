@@ -1,5 +1,5 @@
 import { MantineProvider } from '@mantine/core';
-import { Header } from './components/Header/Header';
+import { Header } from './components/header/Header';
 import { Signup } from './screens/SignUp/Signup';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Login } from './screens/Login/Login';
@@ -7,6 +7,7 @@ import { Home } from './screens/Home/Home';
 import { AppRoutes } from './Routes/routes';
 import { PrivateRoutes } from './utils/PrivateRoutes';
 import { NotFound } from './screens/NotFound/NotFound';
+import { ProductDetails } from './screens/ProductDetails/ProductDetails';
 
 export default function App() {
 	// TODO TMP DATA
@@ -22,6 +23,7 @@ export default function App() {
 				<Routes>
 					<Route element={<PrivateRoutes />}>
 						<Route path={AppRoutes.HOME} element={<Home />} />
+						<Route path={AppRoutes.PRODUCT} element={<ProductDetails />} />
 					</Route>
 					<Route path={AppRoutes.LOGIN} element={<Login />} />
 					<Route path={AppRoutes.SIGNUP} element={<Signup />} />
