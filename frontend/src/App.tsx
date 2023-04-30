@@ -1,5 +1,5 @@
 import { MantineProvider } from '@mantine/core';
-import { Header } from './components/Header/Header';
+import { Header } from './components/header/Header';
 import { Signup } from './screens/SignUp/Signup';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Login } from './screens/Login/Login';
