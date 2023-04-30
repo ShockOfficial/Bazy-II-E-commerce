@@ -1,3 +1,4 @@
+import React from 'react';
 import { Title, Text, Button, Container, Group } from '@mantine/core';
 import { useStyles } from './styles';
 import { AppRoutes } from '../../Routes/routes';
@@ -12,19 +13,19 @@ export function NotFound() {
 			<div className={classes.label}>404</div>
 			<Title className={classes.title}>You have found a secret place.</Title>
 			<Text
-				color='dimmed'
-				size='lg'
-				align='center'
+				color="dimmed"
+				size="lg"
+				align="center"
 				className={classes.description}
 			>
 				Unfortunately, this is only a 404 page. You may have mistyped the
 				address, or the page has been moved to another URL.
 			</Text>
-			<Group position='center'>
+			<Group position="center">
 				<Button
-					variant='gradient'
+					variant="gradient"
 					gradient={{ from: 'teal', to: 'cyan' }}
-					size='md'
+					size="md"
 					onClick={() => {
 						navigate(AppRoutes.HOME);
 					}}

@@ -16,7 +16,7 @@ export const useLogin = (): UseLoginReturn => {
 		return {
 			login: async () => {},
 			isLoading: false,
-			error: null,
+			error: null
 		};
 
 	const login = async (email: string, password: string) => {
@@ -26,9 +26,9 @@ export const useLogin = (): UseLoginReturn => {
 		const response = await fetch('users/login', {
 			method: 'POST',
 			headers: {
-				'Content-Type': 'application/json',
+				'Content-Type': 'application/json'
 			},
-			body: JSON.stringify({ email, password }),
+			body: JSON.stringify({ email, password })
 		});
 
 		const json = await response.json();

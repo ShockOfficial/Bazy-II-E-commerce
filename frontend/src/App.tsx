@@ -1,5 +1,6 @@
+import React from 'react';
 import { MantineProvider } from '@mantine/core';
-import { Header } from './components/header/Header';
+import { Header } from './components/Header/Header';
 import { Signup } from './screens/SignUp/Signup';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Login } from './screens/Login/Login';
@@ -10,8 +11,6 @@ import { NotFound } from './screens/NotFound/NotFound';
 import { ProductDetails } from './screens/ProductDetails/ProductDetails';
 
 export default function App() {
-	// TODO TMP DATA
-	const tabs = ['Home', 'Free Drop', 'Items'];
 	return (
 		<MantineProvider
 			withGlobalStyles
@@ -19,7 +18,7 @@ export default function App() {
 			theme={{ colorScheme: 'dark' }}
 		>
 			<BrowserRouter>
-				<Header tabs={tabs} />
+				<Header />
 				<Routes>
 					<Route element={<PrivateRoutes />}>
 						<Route path={AppRoutes.HOME} element={<Home />} />
