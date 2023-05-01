@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react';
+import { ProductType } from '../common/types';
 
 interface useCollectionReturn {
-	documents: Array<any>;
+	documents: Array<ProductType> | ProductType | null;
 	error: string | null;
 	isLoading: boolean;
 }
 
 export const useCollection = (url: string): useCollectionReturn => {
-	const [documents, setDocuments] = useState([]);
+	const [documents, setDocuments] = useState(null);
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState(null);
 

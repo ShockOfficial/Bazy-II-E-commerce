@@ -2,9 +2,18 @@ import React from 'react';
 import { Grid, Text, Container, Space, Loader, Flex } from '@mantine/core';
 import { useCollection } from '../../hooks/useCollection';
 import { Product } from '../../components/Product/Product';
+import { ProductType } from '../../common/types';
 
 export function Home() {
-	const { documents: products, isLoading, error } = useCollection('products');
+	const {
+		documents: products,
+		isLoading,
+		error
+	} = useCollection('products') as {
+		documents: Array<ProductType>;
+		isLoading: boolean;
+		error: string;
+	};
 
 	const renderContent = () => {
 		if (error) {
@@ -17,7 +26,7 @@ export function Home() {
 			);
 		}
 
-		if (isLoading) {
+		if (isLoading || !products) {
 			return (
 				<Flex justify="center">
 					<Loader color="indigo" mt={30} />
