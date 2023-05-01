@@ -1,3 +1,4 @@
+import React from 'react';
 import { Grid, Text, Container, Space, Loader, Flex } from '@mantine/core';
 import { useCollection } from '../../hooks/useCollection';
 import { Product } from '../../components/Product/Product';
@@ -8,8 +9,8 @@ export function Home() {
 	const renderContent = () => {
 		if (error) {
 			return (
-				<Flex justify='center'>
-					<Text fz='sm' c='red' mt={30}>
+				<Flex justify="center">
+					<Text fz="sm" c="red" mt={30}>
 						{error}
 					</Text>
 				</Flex>
@@ -18,18 +19,18 @@ export function Home() {
 
 		if (isLoading) {
 			return (
-				<Flex justify='center'>
-					<Loader color='indigo' mt={30} />
+				<Flex justify="center">
+					<Loader color="indigo" mt={30} />
 				</Flex>
 			);
 		}
 
 		return (
 			<Grid
-				justify='center'
+				justify="center"
 				gutter={5}
-				gutterXs='md'
-				gutterMd='xl'
+				gutterXs="md"
+				gutterMd="xl"
 				gutterXl={50}
 			>
 				{products.map((product) => (
@@ -40,8 +41,8 @@ export function Home() {
 	};
 
 	return (
-		<Container size='md'>
-			<Space h='xl'></Space>
+		<Container size="md">
+			<Space h="xl"></Space>
 			{renderContent()}
 		</Container>
 	);

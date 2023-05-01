@@ -1,52 +1,50 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
 interface useCollectionReturn {
-    documents: Array<any>;
-    error: string | null;
-    isLoading: boolean;
+	documents: Array<any>;
+	error: string | null;
+	isLoading: boolean;
 }
 
 export const useCollection = (url: string): useCollectionReturn => {
-    const [documents, setDocuments] = useState([]);
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState(null);
+	const [documents, setDocuments] = useState([]);
+	const [isLoading, setIsLoading] = useState(false);
+	const [error, setError] = useState(null);
 
-    useEffect(() => {
-        const controller = new AbortController();
-        const { signal } = controller;
+	useEffect(() => {
+		const controller = new AbortController();
+		const { signal } = controller;
 
-        const fetchData = async () => {
-            setIsLoading(true);
-            setError(null);
+		const fetchData = async () => {
+			setIsLoading(true);
+			setError(null);
 
-            try {
-                const response = await fetch(url, { signal });
-                const json = await response.json();
+			try {
+				const response = await fetch(url, { signal });
+				const json = await response.json();
 
-                if (!response.ok) {
-                    setError(json.error);
-                }
-                else {
-                    setDocuments(json);
-                    setError(null);
-                }
-            } catch (err: any) {
-                if (err.name === "AbortError") {
-                    console.log("Request aborted");
-                }
-                else {
-                    console.log("Error occured", err);
-                    setError(err.message);
-                }
-            }
-            
-            setIsLoading(false);
-        }
+				if (!response.ok) {
+					setError(json.error);
+				} else {
+					setDocuments(json);
+					setError(null);
+				}
+			} catch (err: any) {
+				if (err.name === 'AbortError') {
+					console.log('Request aborted');
+				} else {
+					console.log('Error occured', err);
+					setError(err.message);
+				}
+			}
 
-        fetchData();
+			setIsLoading(false);
+		};
 
-        return () => controller.abort();
-    }, [url]);
+		fetchData();
 
-    return { documents, isLoading, error };
-}
+		return () => controller.abort();
+	}, [url]);
+
+	return { documents, isLoading, error };
+};

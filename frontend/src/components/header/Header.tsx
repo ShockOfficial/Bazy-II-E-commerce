@@ -1,106 +1,83 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import {
 	Container,
-	UnstyledButton,
+	Header as MantineHeader,
 	Group,
 	Text,
-	Menu,
-	Tabs,
-	Burger,
-	rem,
+	Paper,
+	Transition,
+	Burger
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { IconLogout, IconChevronDown } from '@tabler/icons-react';
+import { IconCurrencyDollar } from '@tabler/icons-react';
 import { MantineLogo } from '@mantine/ds';
-import { useStyles } from './styles';
-import { useLogout } from '../../hooks/useLogout';
-import { useAuthContext } from '../../hooks/useAuthContext';
+import { HEADER_HEIGHT, useStyles } from './styles';
 import { useNavigate } from 'react-router-dom';
 import { AppRoutes } from '../../Routes/routes';
+import Menu from '../Menu/Menu';
+import { useAuthContext } from '../../hooks/useAuthContext';
 
-interface HeaderProps {
-	tabs: string[];
-}
-
-export function Header({ tabs }: HeaderProps) {
+export function Header() {
 	const { classes, cx } = useStyles();
-	const [opened, { toggle }] = useDisclosure(false);
-	const [userMenuOpened, setUserMenuOpened] = useState(false);
+	const [opened, { toggle, close }] = useDisclosure(false);
+	const [active, setActive] = useState('Home');
 	const navigate = useNavigate();
-
 	const { user } = useAuthContext();
-	const { logout } = useLogout();
-
-	const onLogout = () => {
-		logout();
-		navigate(AppRoutes.LOGIN);
-	};
+	const tabs = [
+		{ title: 'Home', onClick: () => navigate(AppRoutes.HOME) },
+		{ title: 'Free Drop', onClick: () => navigate(AppRoutes.FREE_DROP) },
+		{ title: 'Marketplace', onClick: () => navigate(AppRoutes.MARKETPLACE) }
+	];
 
 	const items = tabs.map((tab) => (
-		<Tabs.Tab value={tab} key={tab}>
-			{tab}
-		</Tabs.Tab>
+		<p
+			key={tab.title}
+			onClick={() => {
+				tab.onClick();
+				setActive(tab.title);
+				close();
+			}}
+			className={cx(classes.link, {
+				[classes.linkActive]: active === tab.title
+			})}
+		>
+			{tab.title}
+		</p>
 	));
 
 	return (
-		<div className={classes.header}>
-			<Container className={classes.mainSection}>
-				<Group position='apart'>
-					<MantineLogo size={28} />
-
-					<Burger
-						opened={opened}
-						onClick={toggle}
-						className={classes.burger}
-						size='sm'
-					/>
-
-					<Menu
-						width={260}
-						position='bottom-end'
-						transitionProps={{ transition: 'pop-top-right' }}
-						onClose={() => setUserMenuOpened(false)}
-						onOpen={() => setUserMenuOpened(true)}
-						withinPortal
-					>
-						<Menu.Target>
-							<UnstyledButton
-								className={cx(classes.user, {
-									[classes.userActive]: userMenuOpened,
-								})}
-							>
-								<Group spacing={7}>
-									<Text weight={500} size='sm' sx={{ lineHeight: 1 }} mr={3}>
-										{user ? user.email : `user's email`}
-									</Text>
-									<IconChevronDown size={rem(12)} stroke={1.5} />
-								</Group>
-							</UnstyledButton>
-						</Menu.Target>
-						<Menu.Dropdown>
-							<Menu.Item
-								onClick={onLogout}
-								icon={<IconLogout size='0.9rem' stroke={1.5} />}
-							>
-								Logout
-							</Menu.Item>
-						</Menu.Dropdown>
-					</Menu>
+		<MantineHeader height={HEADER_HEIGHT} className={classes.root}>
+			<Container className={classes.header}>
+				<MantineLogo size={28} />
+				<Group spacing={5} className={classes.links}>
+					{items}
 				</Group>
+				<Burger
+					opened={opened}
+					onClick={toggle}
+					className={classes.burger}
+					size="sm"
+				/>
+				<Transition transition="pop-top-right" duration={200} mounted={opened}>
+					{(styles) => (
+						<Paper className={classes.dropdown} style={styles}>
+							{items}
+							{user && <Menu maxWidth />}
+						</Paper>
+					)}
+				</Transition>
+				{user && (
+					<Group position="apart" m={0}>
+						<Group className={classes.walletContainer}>
+							<IconCurrencyDollar size="1.5rem" stroke={1.5} color="gold" />
+							<Text weight={700} size="sm" ml={0}>
+								1000
+							</Text>
+						</Group>
+						<Menu />
+					</Group>
+				)}
 			</Container>
-			<Container>
-				<Tabs
-					defaultValue='Home'
-					variant='outline'
-					classNames={{
-						root: classes.tabs,
-						tabsList: classes.tabsList,
-						tab: classes.tab,
-					}}
-				>
-					<Tabs.List>{items}</Tabs.List>
-				</Tabs>
-			</Container>
-		</div>
+		</MantineHeader>
 	);
 }

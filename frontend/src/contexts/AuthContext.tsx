@@ -1,9 +1,10 @@
+import React from 'react';
 import {
 	ReactNode,
 	Reducer,
 	createContext,
 	useEffect,
-	useReducer,
+	useReducer
 } from 'react';
 
 interface User {
@@ -29,20 +30,20 @@ type AuthAction = {
 };
 
 export const AuthContext = createContext<AuthContextProps>({
-	user: null,
+	user: null
 });
 
 const authReducer: Reducer<AuthState, AuthAction> = (
 	state: AuthState,
-	action: AuthAction,
+	action: AuthAction
 ) => {
 	switch (action.type) {
-		case 'LOGIN':
-			return { user: action.payload };
-		case 'LOGOUT':
-			return { user: null };
-		default:
-			return state;
+	case 'LOGIN':
+		return { user: action.payload };
+	case 'LOGOUT':
+		return { user: null };
+	default:
+		return state;
 	}
 };
 

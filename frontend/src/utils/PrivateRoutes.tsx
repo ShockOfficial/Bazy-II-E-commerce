@@ -1,3 +1,4 @@
+import React from 'react';
 import { Outlet, Navigate } from 'react-router-dom';
 import { checkAuthToken } from '../Routes/Guards';
 import { AppRoutes } from '../Routes/routes';

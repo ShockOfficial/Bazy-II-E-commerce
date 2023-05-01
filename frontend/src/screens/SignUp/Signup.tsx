@@ -1,3 +1,4 @@
+import React from 'react';
 import {
 	TextInput,
 	PasswordInput,
@@ -7,7 +8,7 @@ import {
 	Container,
 	Center,
 	Loader,
-	Button,
+	Button
 } from '@mantine/core';
 import { FormEvent, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -48,18 +49,18 @@ export function Signup() {
 
 	return (
 		<Container size={420} my={40}>
-			<Text color='dimmed' size='sm' align='center' mt={5}>
+			<Text color="dimmed" size="sm" align="center" mt={5}>
 				Do you have an account?{' '}
-				<Anchor size='sm' component='button'>
-					<Link to='/login'>Log in</Link>
+				<Anchor size="sm" component="button">
+					<Link to="/login">Log in</Link>
 				</Anchor>
 			</Text>
 
-			<Paper withBorder shadow='md' p={30} mt={30} radius='md'>
+			<Paper withBorder shadow="md" p={30} mt={30} radius="md">
 				<form onSubmit={handleSubmit}>
 					<TextInput
-						label='Email'
-						placeholder='you@mantine.dev'
+						label="Email"
+						placeholder="you@mantine.dev"
 						required
 						onChange={(e) => setEmail(e.target.value)}
 						value={email}
@@ -67,23 +68,23 @@ export function Signup() {
 						onInput={handleInput}
 					/>
 					<PasswordInput
-						label='Password'
-						placeholder='Your password'
+						label="Password"
+						placeholder="Your password"
 						required
-						mt='md'
+						mt="md"
 						onChange={(e) => setPassword(e.target.value)}
 						value={password}
 						error={error}
 						onInput={handleInput}
 					/>
-					<Button fullWidth mt='xl' type='submit'>
+					<Button fullWidth mt="xl" type="submit">
 						Sign in
 					</Button>
 
-					<Center mt='xl'>
-						{isLoading && <Loader color='indigo' />}
+					<Center mt="xl">
+						{isLoading && <Loader color="indigo" />}
 						{errorMessage && (
-							<Text color='red' size='xs'>
+							<Text color="red" size="xs">
 								{errorMessage}
 							</Text>
 						)}
