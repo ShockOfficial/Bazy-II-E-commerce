@@ -41,31 +41,37 @@ export function ProductDetails() {
 		<Container size="lg">
 			<Flex className={classes.space}>
 				<Container className={classes.carousel} fluid>
-					<Carousel
-						dynamicHeight
-						showArrows
-						showIndicators
-						showThumbs={false}
-					>
+					<Carousel dynamicHeight showArrows showIndicators showThumbs={false}>
 						{product.imageUrls.map((image) => (
 							<div key={image}>
-								<img src={image} alt='product' height={600} />
+								<img src={image} alt="product" height={600} />
 							</div>
 						))}
 					</Carousel>
 				</Container>
 				<div className={classes.informations}>
-					<Title fw={600} className={classes.title} order={3} size="h1">{product.brand}</Title>
+					<Title fw={600} className={classes.title} order={3} size="h1">
+						{product.brand}
+					</Title>
 					<Text className={classes.name}>{product.name}</Text>
 					<Group>
 						<Text className={classes.price}>{product.price} zł</Text>
 						<Text className={classes.span}>w tym VAT</Text>
 					</Group>
 					<Group className={classes.rating} position="center">
-						<Rating size='32px' value={product.rating / product.reviewsNumber} fractions={2} readOnly />
-						<Text className={classes.reviewsNumber}>{product.reviewsNumber}</Text>
+						<Rating
+							size="32px"
+							value={product.rating / product.reviewsNumber}
+							fractions={2}
+							readOnly
+						/>
+						<Text className={classes.reviewsNumber}>
+							{product.reviewsNumber}
+						</Text>
 					</Group>
-					<Button onClick={handleAddToCart} mih={48} fullWidth>Dodaj do koszyka</Button>
+					<Button onClick={handleAddToCart} mih={48} fullWidth>
+						Dodaj do koszyka
+					</Button>
 				</div>
 			</Flex>
 		</Container>
