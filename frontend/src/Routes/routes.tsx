@@ -5,5 +5,6 @@ export const AppRoutes = {
 	SIGNUP: '/signup',
 	FREE_DROP: '/daily-drop',
 	MARKETPLACE: '/marketplace',
+	PROFILE: '/profile',
 	WILDCARD: '*'
 };

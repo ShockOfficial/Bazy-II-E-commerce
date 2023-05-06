@@ -1,4 +1,4 @@
-const Product = require('../models/productModel');
+const Product = require('../models/product.model');
 const mongoose = require('mongoose');
 
 const getProducts = async (req, res) => {

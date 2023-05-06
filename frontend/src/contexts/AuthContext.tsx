@@ -10,6 +10,8 @@ import {
 interface User {
 	email: string;
 	token: string;
+	avatar: string;
+	name: string;
 }
 
 interface AuthState {
@@ -38,12 +40,16 @@ const authReducer: Reducer<AuthState, AuthAction> = (
 	action: AuthAction
 ) => {
 	switch (action.type) {
-	case 'LOGIN':
-		return { user: action.payload };
-	case 'LOGOUT':
-		return { user: null };
-	default:
-		return state;
+		case 'LOGIN':
+			localStorage.setItem('user', JSON.stringify(action.payload));
+			return { user: action.payload };
+		case 'LOGOUT':
+			return { user: null };
+		case 'UPDATE':
+			localStorage.setItem('user', JSON.stringify(action.payload));
+			return { user: action.payload };
+		default:
+			return state;
 	}
 };
 
