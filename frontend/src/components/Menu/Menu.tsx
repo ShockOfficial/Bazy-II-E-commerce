@@ -60,8 +60,7 @@ const Menu = ({ maxWidth }: { maxWidth?: boolean }) => {
 			<MantineMenu.Dropdown>
 				<MantineMenu.Item
 					onClick={() => {
-						// TODO: Go to profile
-						console.log('GO TO PROFILE');
+						navigate(AppRoutes.PROFILE);
 					}}
 					icon={<IconUser size="0.9rem" stroke={1.5} />}
 				>

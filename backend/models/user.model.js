@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const validator = require('validator');
-
+const defaultImage = require('../images/default');
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
@@ -18,8 +18,8 @@ const userSchema = new Schema({
 		type: String
 	},
 	image: {
-		type: Buffer,
-		contentType: String
+		type: String,
+		default: defaultImage
 	},
 	role: {
 		type: String,
@@ -61,9 +61,9 @@ userSchema.statics.signup = async function (email, password) {
 	const saltRounds = 10;
 	const salt = await bcrypt.genSalt(saltRounds);
 	const hash = await bcrypt.hash(password, salt);
-
-	const user = await this.create({ email, password: hash });
-
+  const randomNumber = Math.floor(Math.random() * 900000) + 100000; // Don't care about the uniqueness of the name
+  const randomName = `Guest${randomNumber}`;
+	const user = await this.create({ email, password: hash, name: randomName,  });
 	return user;
 };
 
@@ -137,17 +137,17 @@ userSchema.statics.getFavourites = async function (userId) {
 	return user.favouritesProducts.items;
 };
 
-userSchema.statics.updateProfile = async function (userId, data) {
-	const user = await this.findById(userId);
+userSchema.statics.updateProfile = async function (email, data) {
+	const user = await this.findOne({ email });
 
 	if (!user) {
 		throw Error('User not found');
 	}
-	const { name, image, favourites } = data;
+	const { name, avatar, favourites } = data;
 
-	user.name = name || user.name;
-	user.image = image || user.image;
-	user.favouritesProducts.items = favourites || user.favouritesProducts.items;
+	user.name = !!name ? name : user.name;
+	user.image = !!avatar ? avatar : user.image;
+	user.favouritesProducts.items = !!favourites ? favourites :  user.favouritesProducts.items;
 
 	return user.save();
 };
