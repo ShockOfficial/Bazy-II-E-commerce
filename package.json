@@ -8,7 +8,7 @@
 		"prettier": "^2.8.8"
 	},
 	"scripts": {
-		"lint": "eslint ./frontend/src/"
+		"lint": "eslint ./frontend/src/**/*.{js,ts,tsx}"
 	},
 	"config": {
 		"commitizen": {

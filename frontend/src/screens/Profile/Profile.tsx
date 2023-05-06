@@ -25,7 +25,7 @@ const Profile = () => {
 	const { classes } = useStyles();
 	const { user } = useAuthContext();
 	const [isEditing, setIsEditing] = useState(false);
-	const { update, isLoading } = useUpdate();
+	const { update, isLoading, error } = useUpdate();
 
 	const form = useForm<ProfileForm>({
 		initialValues: {
@@ -39,14 +39,6 @@ const Profile = () => {
 	useEffect(() => {
 		form.resetDirty();
 	}, [user, isLoading]);
-
-	if (!user || isLoading) {
-		return (
-			<Paper p="lg" display="flex">
-				<Loader mx="auto" />
-			</Paper>
-		);
-	}
 
 	const handleFileChange = (e: File) => {
 		if (!e) {
@@ -81,7 +73,26 @@ const Profile = () => {
 		}
 	};
 
-	const name = form.isDirty('name') ? form.values.name : user.name;
+	const name = form.isDirty('name') ? form.values.name : user?.name;
+
+	if (error) {
+		return (
+			<Paper p="lg" display="flex">
+				<Text ta="center" color="red" fz="lg" weight={700}>
+					{error}
+				</Text>
+			</Paper>
+		);
+	}
+
+	if (!user || isLoading) {
+		return (
+			<Paper p="lg" display="flex">
+				<Loader mx="auto" />
+			</Paper>
+		);
+	}
+
 	return (
 		<Paper
 			radius="md"

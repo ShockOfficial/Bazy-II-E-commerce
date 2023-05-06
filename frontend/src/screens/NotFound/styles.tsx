@@ -2,7 +2,7 @@ import { createStyles, rem } from '@mantine/core';
 export const useStyles = createStyles((theme) => ({
 	root: {
 		display: 'flex',
-		flexDirection: 'column',
+		flexDirection: 'column'
 	},
 
 	label: {
@@ -17,8 +17,8 @@ export const useStyles = createStyles((theme) => ({
 				: theme.colors.gray[2],
 
 		[theme.fn.smallerThan('sm')]: {
-			fontSize: rem(120),
-		},
+			fontSize: rem(120)
+		}
 	},
 
 	title: {
@@ -28,14 +28,14 @@ export const useStyles = createStyles((theme) => ({
 		fontSize: rem(38),
 
 		[theme.fn.smallerThan('sm')]: {
-			fontSize: rem(32),
-		},
+			fontSize: rem(32)
+		}
 	},
 
 	description: {
 		maxWidth: rem(500),
 		margin: 'auto',
 		marginTop: theme.spacing.xl,
-		marginBottom: `calc(${theme.spacing.xl} * 1.5)`,
-	},
+		marginBottom: `calc(${theme.spacing.xl} * 1.5)`
+	}
 }));
