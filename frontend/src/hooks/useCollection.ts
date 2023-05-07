@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { ProductType } from '../common/types';
+import { useAuthContext } from './useAuthContext';
 
 interface useCollectionReturn {
 	documents: Array<ProductType> | ProductType | null;
@@ -11,6 +12,7 @@ export const useCollection = (url: string): useCollectionReturn => {
 	const [documents, setDocuments] = useState(null);
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState(null);
+	const { user } = useAuthContext();
 
 	useEffect(() => {
 		const controller = new AbortController();
@@ -21,7 +23,12 @@ export const useCollection = (url: string): useCollectionReturn => {
 			setError(null);
 
 			try {
-				const response = await fetch(url, { signal });
+				const response = await fetch(url, {
+					headers: {
+						Authorization: `Bearer ${user?.token}`
+					},
+					signal: signal
+				});
 				const json = await response.json();
 
 				if (!response.ok) {
@@ -45,7 +52,7 @@ export const useCollection = (url: string): useCollectionReturn => {
 		fetchData();
 
 		return () => controller.abort();
-	}, [url]);
+	}, [url, user]);
 
 	return { documents, isLoading, error };
 };

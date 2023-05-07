@@ -137,12 +137,7 @@ userSchema.statics.getFavourites = async function (userId) {
 	return user.favouritesProducts.items;
 };
 
-userSchema.statics.updateProfile = async function (email, data) {
-	const user = await this.findOne({ email });
-
-	if (!user) {
-		throw Error('User not found');
-	}
+userSchema.statics.updateProfile = async function (user, data) {
 	const { name, avatar, favourites } = data;
 
 	user.name = !!name ? name : user.name;

@@ -15,7 +15,7 @@ interface UseUpdate {
 export const useUpdate = (): UseUpdate => {
 	const [error, setError] = useState(null);
 	const [isLoading, setIsLoading] = useState(false);
-	const { dispatch } = useAuthContext();
+	const { user, dispatch } = useAuthContext();
 
 	if (!dispatch)
 		return {
@@ -31,7 +31,7 @@ export const useUpdate = (): UseUpdate => {
 			method: 'PUT',
 			headers: {
 				'Content-Type': 'application/json',
-				Authorization: `Bearer ${localStorage.getItem('token')}`
+				Authorization: `Bearer ${user?.token}`
 			},
 			body: JSON.stringify({ email, data })
 		});
