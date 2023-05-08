@@ -234,5 +234,17 @@ export const useStyles = createStyles((theme) => ({
 		borderRadius: '0.5rem',
 		gap: 0,
 		backgroundColor: theme.colors.dark[7]
+	},
+
+	cartContainer: {
+		position: 'relative',
+		cursor: 'pointer'
+	},
+
+	cartBadge: {
+		position: 'absolute',
+		top: '-10px',
+		right: '-18px',
+		background: theme.colors.red[6]
 	}
 }));

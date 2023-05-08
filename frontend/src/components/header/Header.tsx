@@ -6,10 +6,13 @@ import {
 	Text,
 	Paper,
 	Transition,
-	Burger
+	Burger,
+	Center,
+	Badge
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconCurrencyDollar } from '@tabler/icons-react';
+import { IconShoppingCart } from '@tabler/icons-react';
 import { MantineLogo } from '@mantine/ds';
 import { HEADER_HEIGHT, useStyles } from './styles';
 import { useNavigate } from 'react-router-dom';
@@ -77,6 +80,13 @@ export function Header() {
 						<Menu />
 					</Group>
 				)}
+				<Center
+					className={classes.cartContainer}
+					onClick={() => navigate(AppRoutes.SHOPPING_CART)}
+				>
+					<IconShoppingCart />
+					<Badge className={classes.cartBadge}>5</Badge>
+				</Center>
 			</Container>
 		</MantineHeader>
 	);
