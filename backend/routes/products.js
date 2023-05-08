@@ -1,4 +1,5 @@
 const express = require('express');
+const requireAuth = require('../middlewares/requireAuth');
 
 // controller function
 const {
@@ -8,6 +9,8 @@ const {
 } = require('../controllers/productsController');
 
 const router = express.Router();
+
+router.use(requireAuth);
 
 router.get('/', getProducts);
 
