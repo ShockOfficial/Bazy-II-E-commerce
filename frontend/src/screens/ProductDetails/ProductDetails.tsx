@@ -15,10 +15,12 @@ import { useStyles } from './styles';
 import { ProductType } from '../../common/types';
 import { useParams } from 'react-router-dom';
 import { useCollection } from '../../hooks/useCollection';
+import { useCartContext } from '../../hooks/useCartContext';
 
 export function ProductDetails() {
 	const { classes } = useStyles();
 	const { _id } = useParams();
+	const { dispatch } = useCartContext();
 
 	const { documents: product } = useCollection(`/products/${_id}`) as {
 		documents: ProductType;
@@ -32,9 +34,10 @@ export function ProductDetails() {
 		);
 	}
 
-	// TO DO
 	const handleAddToCart = () => {
-		console.log('Add to cart');
+		if (!dispatch) return;
+
+		dispatch({ type: 'ADD_TO_CART', payload: product });
 	};
 
 	return (

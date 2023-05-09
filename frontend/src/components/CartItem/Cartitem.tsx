@@ -2,6 +2,7 @@ import React from 'react';
 import { Button, Flex, Image, Stack, Text, Center } from '@mantine/core';
 import { useStyles } from './styles';
 import { CartItem } from '../../common/types';
+import { useCartContext } from '../../hooks/useCartContext';
 
 interface CartItemProps {
 	item: CartItem;
@@ -9,6 +10,25 @@ interface CartItemProps {
 
 export function Cartitem(row: CartItemProps) {
 	const { classes } = useStyles();
+	const { dispatch } = useCartContext();
+
+	const handleIncreaseQuantity = () => {
+		if (!dispatch) return;
+
+		dispatch({ type: 'ADD_TO_CART', payload: row.item.product });
+	};
+
+	const handleDecreaseQuantity = () => {
+		if (!dispatch) return;
+
+		dispatch({ type: 'DECREASE_QUANTITY', payload: row.item.product });
+	};
+
+	const handleRemove = () => {
+		if (!dispatch) return;
+
+		dispatch({ type: 'REMOVE_FROM_CART', payload: row.item.product });
+	};
 
 	return (
 		<tr>
@@ -23,9 +43,16 @@ export function Cartitem(row: CartItemProps) {
 			</td>
 			<td>
 				<Flex justify="center">
-					<Button className={classes.quantityBox}>+</Button>
+					<Button
+						onClick={handleIncreaseQuantity}
+						disabled={row.item.quantity > row.item.product.unitsInStock}
+						className={classes.quantityBox}
+					>
+						+
+					</Button>
 					<Text className={classes.quantityBox}>{row.item.quantity}</Text>
 					<Button
+						onClick={handleDecreaseQuantity}
 						disabled={row.item.quantity === 1 ? true : false}
 						className={classes.quantityBox}
 					>
@@ -35,14 +62,20 @@ export function Cartitem(row: CartItemProps) {
 			</td>
 			<td>
 				<Center>
-					<Button fz="sm" className={classes.quantityBox}>
+					<Button
+						onClick={handleRemove}
+						fz="sm"
+						className={classes.quantityBox}
+					>
 						X
 					</Button>
 				</Center>
 			</td>
 			<td>
 				<Center>
-					<Text className={classes.price}>{row.item.product.price}$</Text>
+					<Text className={classes.price}>
+						{(row.item.product.price * row.item.quantity).toFixed(2)}$
+					</Text>
 				</Center>
 			</td>
 		</tr>

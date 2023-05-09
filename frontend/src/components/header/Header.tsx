@@ -19,6 +19,7 @@ import { useNavigate } from 'react-router-dom';
 import { AppRoutes } from '../../Routes/routes';
 import Menu from '../Menu/Menu';
 import { useAuthContext } from '../../hooks/useAuthContext';
+import { useCartContext } from '../../hooks/useCartContext';
 
 export function Header() {
 	const { classes, cx } = useStyles();
@@ -26,6 +27,7 @@ export function Header() {
 	const [active, setActive] = useState('Home');
 	const navigate = useNavigate();
 	const { user } = useAuthContext();
+	const { products } = useCartContext();
 	const tabs = [
 		{ title: 'Home', onClick: () => navigate(AppRoutes.HOME) },
 		{ title: 'Free Drop', onClick: () => navigate(AppRoutes.FREE_DROP) },
@@ -85,7 +87,9 @@ export function Header() {
 					onClick={() => navigate(AppRoutes.SHOPPING_CART)}
 				>
 					<IconShoppingCart />
-					<Badge className={classes.cartBadge}>5</Badge>
+					{products.length > 0 && (
+						<Badge className={classes.cartBadge}>{products.length}</Badge>
+					)}
 				</Center>
 			</Container>
 		</MantineHeader>
