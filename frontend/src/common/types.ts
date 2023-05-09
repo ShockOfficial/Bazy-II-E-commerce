@@ -10,3 +10,8 @@ export interface ProductType {
 	reviewsNumber: number;
 	unitsInStock: number;
 }
+
+export interface CartItem {
+	product: ProductType,
+	quantity: number
+}

@@ -6,5 +6,6 @@ export const AppRoutes = {
 	FREE_DROP: '/daily-drop',
 	MARKETPLACE: '/marketplace',
 	PROFILE: '/profile',
+	SHOPPING_CART: '/shopping-cart',
 	WILDCARD: '*'
 };

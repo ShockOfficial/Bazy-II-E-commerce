@@ -10,6 +10,7 @@ import { PrivateRoutes } from './utils/PrivateRoutes';
 import { NotFound } from './screens/NotFound/NotFound';
 import { ProductDetails } from './screens/ProductDetails/ProductDetails';
 import Profile from './screens/Profile/Profile';
+import { Shoppingcart } from './screens/ShoppingCart/Shoppingcart';
 
 export default function App() {
 	return (
@@ -25,6 +26,7 @@ export default function App() {
 						<Route path={AppRoutes.HOME} element={<Home />} />
 						<Route path={AppRoutes.PRODUCT} element={<ProductDetails />} />
 						<Route path={AppRoutes.PROFILE} element={<Profile />} />
+						<Route path={AppRoutes.SHOPPING_CART} element={<Shoppingcart />} />
 					</Route>
 					<Route path={AppRoutes.LOGIN} element={<Login />} />
 					<Route path={AppRoutes.SIGNUP} element={<Signup />} />
