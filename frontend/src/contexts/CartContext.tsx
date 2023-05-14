@@ -22,7 +22,7 @@ type CartContextProviderProps = {
 
 type CartAction = {
 	type: string;
-	payload: ProductType;
+	payload?: ProductType;
 };
 
 export const CartContext = createContext<CartContextProps>({
@@ -36,22 +36,31 @@ const cartReducer: Reducer<CartState, CartAction> = (
 ) => {
 	switch (action.type) {
 		case 'ADD_TO_CART': {
+			if (!action.payload) return state;
+
 			const products = [...state.products];
 			const updatedProducts = addToCart(products, action.payload);
 
 			return { products: updatedProducts };
 		}
 		case 'DECREASE_QUANTITY': {
+			if (!action.payload) return state;
+
 			const products = [...state.products];
 			const updatedProducts = decreaseCartQuantity(products, action.payload);
 
 			return { products: updatedProducts };
 		}
 		case 'REMOVE_FROM_CART': {
+			if (!action.payload) return state;
+
 			const products = [...state.products];
 			const updatedProducts = removeFromCart(products, action.payload);
 
 			return { products: updatedProducts };
+		}
+		case 'CLEAR': {
+			return { products: [] };
 		}
 		default:
 			return state;
@@ -60,7 +69,7 @@ const cartReducer: Reducer<CartState, CartAction> = (
 
 export const CartContextProvider = ({ children }: CartContextProviderProps) => {
 	const [state, dispatch] = useReducer(cartReducer, { products: [] });
-	console.log(state);
+
 	return (
 		<CartContext.Provider value={{ ...state, dispatch }}>
 			{children}

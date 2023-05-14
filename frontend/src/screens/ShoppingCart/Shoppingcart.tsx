@@ -4,11 +4,13 @@ import { useStyles } from './styles';
 import { IconShoppingCart } from '@tabler/icons-react';
 import { Cartitem } from '../../components/CartItem/Cartitem';
 import { useCartContext } from '../../hooks/useCartContext';
+import { useCheckout } from '../../hooks/useCheckout';
 
 export function Shoppingcart() {
 	const [totalPrice, setTotalPrice] = useState(0);
 	const { classes, cx } = useStyles();
 	const { products } = useCartContext();
+	const { checkout, isLoading, error } = useCheckout();
 
 	useEffect(() => {
 		const total = products.reduce(
@@ -19,8 +21,12 @@ export function Shoppingcart() {
 		setTotalPrice(total);
 	}, [products]);
 
-	const handleCheckout = () => {
-		console.log('handle');
+	const handleCheckout = async () => {
+		if (products.length === 0) return;
+
+		await checkout(products);
+		// TODO: Add notification with error
+		console.log(error);
 	};
 
 	const rows = products.map((product) => {
@@ -76,7 +82,11 @@ export function Shoppingcart() {
 			</Flex>
 			<Flex justify="flex-end">
 				<div className={cx(classes.box, classes.checkoutBox)}>
-					<Button onClick={handleCheckout} className={classes.checkoutButton}>
+					<Button
+						disabled={isLoading}
+						onClick={handleCheckout}
+						className={classes.checkoutButton}
+					>
 						Checkout
 					</Button>
 					<IconShoppingCart className={classes.checkoutIcon} />
