@@ -5,7 +5,9 @@ const requireAuth = require('../middlewares/requireAuth');
 const {
 	getProducts,
 	getProduct,
-	createProduct
+	createProduct,
+	buyProducts,
+	updateProduct
 } = require('../controllers/productsController');
 
 const router = express.Router();
@@ -17,5 +19,9 @@ router.get('/', getProducts);
 router.get('/:_id', getProduct);
 
 router.post('/', createProduct);
+
+router.post('/buy-products', buyProducts);
+
+router.patch('/:_id', updateProduct);
 
 module.exports = router;
