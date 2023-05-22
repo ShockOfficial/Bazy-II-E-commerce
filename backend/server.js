@@ -16,10 +16,9 @@ app.use((req, res, next) => {
 });
 
 // routes
-app.use('/users', cors(),userRoutes);
+app.use('/users', cors(), userRoutes);
 
 app.use('/products', productsRoutes);
-
 
 // make a connection with db
 mongoose

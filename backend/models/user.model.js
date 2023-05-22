@@ -61,9 +61,9 @@ userSchema.statics.signup = async function (email, password) {
 	const saltRounds = 10;
 	const salt = await bcrypt.genSalt(saltRounds);
 	const hash = await bcrypt.hash(password, salt);
-  const randomNumber = Math.floor(Math.random() * 900000) + 100000; // Don't care about the uniqueness of the name
-  const randomName = `Guest${randomNumber}`;
-	const user = await this.create({ email, password: hash, name: randomName,  });
+	const randomNumber = Math.floor(Math.random() * 900000) + 100000; // Don't care about the uniqueness of the name
+	const randomName = `Guest${randomNumber}`;
+	const user = await this.create({ email, password: hash, name: randomName });
 	return user;
 };
 
@@ -142,7 +142,23 @@ userSchema.statics.updateProfile = async function (user, data) {
 
 	user.name = !!name ? name : user.name;
 	user.image = !!avatar ? avatar : user.image;
-	user.favouritesProducts.items = !!favourites ? favourites :  user.favouritesProducts.items;
+	user.favouritesProducts.items = !!favourites
+		? favourites
+		: user.favouritesProducts.items;
+
+	return user.save();
+};
+
+userSchema.statics.removeFromFavourites = async function (userId, productId) {
+	const user = await this.findById(userId);
+
+	if (!user) {
+		throw Error('User not found');
+	}
+
+	user.favouritesProducts.items = user.favouritesProducts.items.filter(
+		(item) => item.productId.toString() !== productId.toString()
+	);
 
 	return user.save();
 };
