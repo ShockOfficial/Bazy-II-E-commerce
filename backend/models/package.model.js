@@ -20,7 +20,15 @@ const packageSchema = new Schema(
                     required: true
                 }
             }
-        ]
+        ],
+        cost: {
+            type: Number,
+            required: true
+        },
+        cooldown: {
+            type: Number,
+            required: true
+        }
     },
     { timestamps: true }
 );
