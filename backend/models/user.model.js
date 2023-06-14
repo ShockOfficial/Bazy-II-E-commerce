@@ -35,7 +35,33 @@ const userSchema = new Schema({
 				}
 			}
 		]
-	}
+	},
+	openedPackages: [
+		{
+			packageId: {
+				type: Schema.Types.ObjectId,
+				required: true
+			},
+			openedAt: {
+				type: Date,
+				default: Date.now(),
+				required: true
+			}
+		}
+	],
+	products: [
+		{
+			productId: {
+				type: Schema.Types.ObjectId,
+				ref: 'Product',
+				required: true
+			},
+			quantity: {
+				type: Number,
+				required: true
+			}
+		}
+	]
 });
 
 userSchema.statics.signup = async function (email, password) {
