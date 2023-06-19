@@ -18,7 +18,7 @@ const getAllPackages = async (req, res) => {
 
         res.status(200).json(package);
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        res.status(500).json({ error: error.message });
     }
 }
 
@@ -37,7 +37,7 @@ const getPackage = async (req, res) => {
 
         res.status(200).json(package);
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        res.status(500).json({ error: error.message });
     }
 }
 
@@ -84,7 +84,7 @@ const createPackage = async (req, res) => {
         const newPackage = await Package.create(packageData);
         res.status(200).json(newPackage);
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        res.status(500).json({ error: error.message });
     }
 };
 
@@ -151,7 +151,7 @@ const getRandomItem = async (req, res) => {
 
         res.status(200).json({ _id: drawItem.productId._id });
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        res.status(500).json({ error: error.message });
     }
 }
 
