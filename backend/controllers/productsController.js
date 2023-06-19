@@ -1,4 +1,5 @@
 const Product = require('../models/product.model');
+const User = require('../models/user.model');
 const mongoose = require('mongoose');
 
 const getProducts = async (req, res) => {
@@ -147,27 +148,65 @@ const buyProducts = async (req, res) => {
 	session.startTransaction();
 
 	const products = req.body.products;
+	const buyer = req.user;
 
 	try {
 		const productsIds = products.map((product) => product.product._id);
 		const foundProducts = await Product.find({ _id: { $in: productsIds } }).session(session);
 
-		const updates = foundProducts.map((product) => {
-			const boughtProduct = products.find((prod) => {
-				return prod.product._id.toString() === product._id.toString();
-			});
-
+		const totalPrice = foundProducts.reduce((total, product) => {
+			const boughtProduct = products.find((prod) => prod.product._id.toString() === product._id.toString());
 			if (product.unitsInStock < boughtProduct.quantity) {
 				throw new Error(`Not enough quantity of the product: ${product.name}`);
 			}
 
-			return Product.updateOne(
-				{ _id: product._id },
-				{ $inc: { unitsInStock: -boughtProduct.quantity } }
-			).session(session);
+			return total + product.price * boughtProduct.quantity;
+		}, 0);
+
+		if (buyer.money < totalPrice) {
+			throw new Error('Insufficient funds');
+		}
+
+		const updates = foundProducts.map(async (product) => {
+			const boughtProduct = products.find((prod) => prod.product._id.toString() === product._id.toString());
+			let id = product._id;
+
+			if (product.userId != null) {
+				const seller = await User.findById(product.userId).session(session);
+				const soldItem = seller.products.find((item) => item._id.toString() === product.userProductId.toString());
+				id = soldItem.productId;
+
+				if (soldItem) {
+					soldItem.quantity -= boughtProduct.quantity;
+					if (soldItem.quantity === 0) {
+						seller.products.pull(soldItem._id);
+					}
+				}
+
+				seller.money += product.price * boughtProduct.quantity;
+				await seller.save();
+			}
+
+			const existingItem = buyer.products.find((item) => item.productId.toString() === id.toString());
+			if (existingItem) {
+				existingItem.quantity += boughtProduct.quantity;
+			}
+			else {
+				buyer.products.push({ productId: id, quantity: boughtProduct.quantity });
+			}
+
+			product.unitsInStock -= boughtProduct.quantity;
+			if (product.unitsInStock === 0 && product.userId) {
+				return Product.deleteOne({ _id: product._id }).session(session);
+			}
+
+			return product.save();
 		});
 
 		await Promise.all(updates);
+		buyer.money -= totalPrice;
+		await buyer.save();
+
 		await session.commitTransaction();
 
 		res.status(200).json(products);
