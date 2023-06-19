@@ -7,7 +7,10 @@ const {
 	getProduct,
 	createProduct,
 	buyProducts,
-	updateProduct
+	sellProducts,
+	updateProduct,
+	removeFromSale,
+	updateSaleParameters
 } = require('../controllers/productsController');
 
 const router = express.Router();
@@ -21,6 +24,12 @@ router.get('/:_id', getProduct);
 router.post('/', createProduct);
 
 router.post('/buy-products', buyProducts);
+
+router.post('/sell-products', sellProducts);
+
+router.patch('/sell-products', updateSaleParameters);
+
+router.post('/remove-from-sale', removeFromSale);
 
 router.patch('/:_id', updateProduct);
 

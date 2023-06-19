@@ -45,6 +45,10 @@ const productSchema = new Schema(
 		userId: {
 			type: Schema.Types.ObjectId,
 			ref: 'User'
+		},
+		userProductId: {
+			type: Schema.Types.ObjectId,
+			ref: 'User.products'
 		}
 	},
 	{ timestamps: true }

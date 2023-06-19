@@ -32,6 +32,98 @@ const createProduct = async (req, res) => {
 	}
 };
 
+const removeFromSale = async (req, res) => {
+	const { user } = req;
+	const { productId } = req.body;
+
+	try {
+		if (!mongoose.Types.ObjectId.isValid(productId)) {
+			return res.status(404).json({ error: 'There is no such product' });
+		}
+		
+		const product = await Product.findOne({ _id: productId });
+		// Could use findOneAndDelete() instead, but if we want give access for admin to delete users sales there must be if statement to check if we are the user who created the sale or if we are an admin.
+		
+		if (!product) {
+			return res.status(400).json({ error: 'There is no such product' });
+		}
+
+		if (!product.userId.toString() === user._id.toString()) {
+			return res.status(404).json({ error: 'There is no such product created by the user' });
+		}
+
+		const deletedDocument = await Product.deleteOne({ _id: productId });
+
+		res.status(200).json({ product: deletedDocument });
+	} catch (error) {
+		res.status(400).json({ error: error.message });
+	}
+}
+
+const sellProducts = async (req, res) => {
+	const { user } = req;
+	const { productId, quantity, price } = req.body;
+
+	try {
+		if (!mongoose.Types.ObjectId.isValid(productId)) {
+			return res.status(404).json({ error: 'There is no such product' });
+		}
+
+		const alreadyExist = await Product.findOne({ userProductId: productId }) == null ? false : true;
+		if (alreadyExist) {
+			return res.status(409).json({ error: 'Product already exists' });
+		}
+
+		const index = user.products.findIndex((product) => product._id.toString() === productId);
+		if (index === -1) {
+			return res.status(404).json({ error: 'There is no such product in user inventory' });
+		}
+
+		if (user.products[index].quantity < quantity) {
+			return res.status(400).json({ error: 'There is no enough quantity' });
+		}
+
+		const product = await Product.findById(user.products[index].productId);
+		const newProduct = await Product.create({ ...product._doc, unitsInStock: quantity, price: price, userId: user._id, userProductId: user.products[index]._id, _id: new mongoose.Types.ObjectId() });
+
+		res.status(200).json({ product: newProduct });
+	} catch (error) {
+		res.status(400).json({ error: error.message });
+	}
+}
+
+const updateSaleParameters = async (req, res) => {
+	const { user } = req;
+	const { _id, price, quantity } = req.body;
+
+	try {
+		if (!mongoose.Types.ObjectId.isValid(_id)) {
+			return res.status(404).json({ error: 'There is no such product' });
+		}
+		
+		const product = await Product.findOne({ _id: _id });
+
+		const index = user.products.findIndex((prod) => prod._id.toString() === product.userProductId.toString());
+		if (index === -1) {
+			return res.status(404).json({ error: 'There is no such product in user inventory' });
+		}
+
+		if (user.products[index].quantity < quantity) {
+			return res.status(400).json({ error: 'There is no enough quantity' });
+		}
+
+		if (price != null && price > 0) product.price = price;
+
+		if (quantity != null && quantity > 0) product.unitsInStock = quantity;
+
+		await product.save();
+
+		res.status(200).json({ product: product });
+	} catch (error) {
+		res.status(400).json({ error: error.message });
+	}
+}
+
 const updateProduct = async (req, res) => {
 	const { _id } = req.params;
 
@@ -92,5 +184,8 @@ module.exports = {
 	getProduct,
 	createProduct,
 	updateProduct,
-	buyProducts
+	buyProducts,
+	sellProducts,
+	removeFromSale,
+	updateSaleParameters
 };
