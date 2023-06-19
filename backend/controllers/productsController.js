@@ -29,7 +29,7 @@ const createProduct = async (req, res) => {
 		const product = await Product.create({ ...req.body });
 		res.status(200).json(product);
 	} catch (error) {
-		res.status(400).json({ error: error.message });
+		res.status(500).json({ error: error.message });
 	}
 };
 
@@ -49,7 +49,7 @@ const removeFromSale = async (req, res) => {
 			return res.status(400).json({ error: 'There is no such product' });
 		}
 
-		if (!product.userId.toString() === user._id.toString()) {
+		if (user.role === "user" && !product.userId.toString() === user._id.toString()) {
 			return res.status(404).json({ error: 'There is no such product created by the user' });
 		}
 
@@ -57,7 +57,7 @@ const removeFromSale = async (req, res) => {
 
 		res.status(200).json({ product: deletedDocument });
 	} catch (error) {
-		res.status(400).json({ error: error.message });
+		res.status(500).json({ error: error.message });
 	}
 }
 
@@ -89,7 +89,7 @@ const sellProducts = async (req, res) => {
 
 		res.status(200).json({ product: newProduct });
 	} catch (error) {
-		res.status(400).json({ error: error.message });
+		res.status(500).json({ error: error.message });
 	}
 }
 
@@ -121,7 +121,7 @@ const updateSaleParameters = async (req, res) => {
 
 		res.status(200).json({ product: product });
 	} catch (error) {
-		res.status(400).json({ error: error.message });
+		res.status(500).json({ error: error.message });
 	}
 }
 
@@ -157,14 +157,14 @@ const buyProducts = async (req, res) => {
 		const totalPrice = foundProducts.reduce((total, product) => {
 			const boughtProduct = products.find((prod) => prod.product._id.toString() === product._id.toString());
 			if (product.unitsInStock < boughtProduct.quantity) {
-				throw new Error(`Not enough quantity of the product: ${product.name}`);
+				return res.status(400).json({ error: `Not enough quantity of the product: ${product.name}` });
 			}
 
 			return total + product.price * boughtProduct.quantity;
 		}, 0);
 
 		if (buyer.money < totalPrice) {
-			throw new Error('Insufficient funds');
+			return res.status(400).json({ error: 'Insufficient funds'})
 		}
 
 		const updates = foundProducts.map(async (product) => {
@@ -212,7 +212,7 @@ const buyProducts = async (req, res) => {
 		res.status(200).json(products);
 	} catch (error) {
 		await session.abortTransaction();
-		res.status(400).json({ error: error.message });
+		res.status(500).json({ error: error.message });
 	} finally {
 		session.endSession();
 	}
