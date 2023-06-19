@@ -25,6 +25,10 @@ const userSchema = new Schema({
 		type: String,
 		default: 'user'
 	},
+	money: {
+		type: Number,
+		default: 1000
+	},
 	favouritesProducts: {
 		items: [
 			{

@@ -42,10 +42,10 @@ const getPackage = async (req, res) => {
 }
 
 const createPackage = async (req, res) => {
-    const { name, items } = req.body;
+    const { name, items, cost, cooldown } = req.body;
 
     for (item of items) {
-        const { productId} = item;
+        const { productId } = item;
         
         if (!mongoose.Types.ObjectId.isValid(productId)) {
             return res.status(404).json({ error: "At least one products id is invalid" });
@@ -68,6 +68,8 @@ const createPackage = async (req, res) => {
 
         const packageData = {
             name,
+            cost,
+            cooldown,
             items: []
         };
 
