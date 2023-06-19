@@ -108,9 +108,9 @@ const getRandomItem = async (req, res) => {
             return res.status(400).json({ error: `You have to wait ${package.cooldown} seconds between drawing the items` });
         }
 
-        // TODO: Check if the user has enough money to draw the items
-        // TODO: Check if the user has enough money to draw the items
-        // TODO: Check if the user has enough money to draw the items
+        if (user.money < package.cost) {
+            return res.status(400).json({ error: 'Insufficient funds' });
+        }
 
         // Draw item
         const minProbability = package.items.reduce((acc, item) => Math.min(acc, item.probability), Infinity);
