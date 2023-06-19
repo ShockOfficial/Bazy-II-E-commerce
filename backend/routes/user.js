@@ -1,11 +1,13 @@
 const express = require('express');
 const requireAuth = require('../middlewares/requireAuth');
+const rolePermissions = require('../middlewares/rolePermissions');
 
 // controller function
 const {
 	loginUser,
 	signupUser,
-	updateUser
+	updateUser,
+	changeRole
 } = require('../controllers/userController');
 
 const {
@@ -21,8 +23,14 @@ router.post('/login', loginUser);
 router.post('/signup', signupUser);
 
 // Protected routes
-router.put('/update', requireAuth, updateUser);
-router.get('/favourites', requireAuth, getFavourites);
-router.post('/favourites/add', requireAuth, addToFavourites);
-router.post('/favourites/remove', requireAuth, removeFromFavourites);
+router.use(requireAuth);
+router.use(rolePermissions(["user", "admin"]));
+router.put('/update', updateUser);
+router.get('/favourites', getFavourites);
+router.post('/favourites/add', addToFavourites);
+router.post('/favourites/remove', removeFromFavourites);
+
+router.use(rolePermissions(["admin"]));
+router.patch('/change-role', changeRole);
+
 module.exports = router;

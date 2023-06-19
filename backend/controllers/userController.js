@@ -1,5 +1,11 @@
 const User = require('../models/user.model');
 const jwt = require('jsonwebtoken');
+const mongoose = require('mongoose');
+
+const ROLES = [
+	"user",
+	"admin"
+]
 
 const createToken = (_id) => {
 	return jwt.sign({ _id }, process.env.SECRET);
@@ -47,8 +53,35 @@ const updateUser = async (req, res) => {
 	}
 };
 
+const changeRole = async (req, res) => {
+	const { userId, newRole } = req.body;
+
+	try {
+		if (!mongoose.Types.ObjectId.isValid(userId)) {
+			return res.status(404).json({ error: 'User not found' });
+		}
+
+		if (!ROLES.includes(newRole)) {
+			return res.status(400).json({ error: 'Invalid role' });
+		}
+
+		const user = await User.findById(userId);
+		if (!user) {
+			return res.status(404).json({ error: 'User not found' });
+		}
+
+		user.role = newRole;
+		await user.save();
+
+		res.status(200).json({ message: 'Role updated successfully' });
+	} catch (error) {
+		res.status(500).json({ error: error.message });
+	}
+}
+
 module.exports = {
 	loginUser,
 	signupUser,
-	updateUser
+	updateUser,
+	changeRole
 };
