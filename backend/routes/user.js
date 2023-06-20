@@ -8,7 +8,9 @@ const {
 	signupUser,
 	updateUser,
 	changeRole,
-	updateOrderInfo
+	updateOrderInfo,
+	getUserProducts,
+	getUsers
 } = require('../controllers/userController');
 
 const {
@@ -26,6 +28,7 @@ router.post('/signup', signupUser);
 // Protected routes
 router.use(requireAuth);
 router.use(rolePermissions(["user", "admin"]));
+router.get('/get-products/:_id', getUserProducts);
 router.put('/update', updateUser);
 router.get('/favourites', getFavourites);
 router.post('/favourites/add', addToFavourites);
@@ -33,6 +36,7 @@ router.post('/favourites/remove', removeFromFavourites);
 router.patch('/update-order-info', updateOrderInfo);
 
 router.use(rolePermissions(["admin"]));
+router.get('/', getUsers);
 router.patch('/change-role', changeRole);
 
 module.exports = router;
