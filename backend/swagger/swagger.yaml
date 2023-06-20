@@ -690,6 +690,54 @@ paths:
           description: Successful operation
           schema:
             $ref: '#/definitions/Payment'
+  /orders:
+    get:
+      summary: Get all orders
+      tags:
+        - Orders
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Order'
+    post:
+      summary: Create a new order
+      tags:
+        - Orders
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Order'
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Order'
+
+  /orders/{_id}:
+    get:
+      summary: Get an order by ID
+      tags:
+        - Orders
+      parameters:
+        - name: _id
+          in: path
+          required: true
+          description: ID of the order
+          type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Order'
+        '400':
+          description: Invalid order ID
+        '404':
+          description: Order not found
 
 definitions:
   Product:
@@ -787,6 +835,66 @@ definitions:
         type: string
         format: ObjectId
         description: ID of the user's product
+
+  Order:
+    type: object
+    properties:
+      user:
+        type: object
+        properties:
+          userId:
+            type: string
+            format: ObjectId
+            description: ID of the user who owns the order
+          name:
+            type: string
+            description: Name of the user
+          email:
+            type: string
+            description: Email of the user
+      items:
+        type: array
+        items:
+          type: object
+          properties:
+            productId:
+              type: string
+              format: ObjectId
+              description: ID of the product
+            quantity:
+              type: number
+              description: Quantity of the product
+      status:
+        type: string
+        description: Status of the order
+        enum:
+          - pending
+          - processing
+          - shipped
+          - delivered
+          - cancelled
+      paymentId:
+        type: string
+        format: ObjectId
+        description: ID of the payment
+      shippingAddress:
+        type: object
+        properties:
+          address:
+            type: string
+            description: Address of the order
+          city:
+            type: string
+            description: City of the order
+          postalCode:
+            type: string
+            description: Postal code of the order
+          country:
+            type: string
+            description: Country of the order
+      contactNumber:
+        type: string
+        description: Contact number of the order
 
   DrawItemRequest:
     type: object
