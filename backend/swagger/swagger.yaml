@@ -1,8 +1,8 @@
 swagger: '2.0'
 info:
-  title: Backend API
+  title: ECB Project
   version: 1.0.0
-host: your-hostname.com
+host: no-hosting.com
 basePath: /
 schemes:
   - https
@@ -271,7 +271,7 @@ paths:
           description: Unauthorized
         '404':
           description: User not found or Product not found in favourites
-  /users/favourites/:_id:
+  /users/favourites/:{_id}:
     delete:
       summary: Remove Product from Favourites
       tags:
@@ -316,7 +316,7 @@ paths:
           description: Unauthorized
         '404':
           description: User not found or Product not found in favourites
-  /users/get-products/:_id:
+  /users/get-products/:{_id}:
     get:
       summary: Get User's Products
       tags:
