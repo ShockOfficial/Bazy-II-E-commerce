@@ -2,10 +2,7 @@ const User = require('../models/user.model');
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 
-const ROLES = [
-	"user",
-	"admin"
-]
+const ROLES = ['user', 'admin'];
 
 const createToken = (_id) => {
 	return jwt.sign({ _id }, process.env.SECRET);
@@ -77,7 +74,7 @@ const changeRole = async (req, res) => {
 	} catch (error) {
 		res.status(500).json({ error: error.message });
 	}
-}
+};
 
 module.exports = {
 	loginUser,
