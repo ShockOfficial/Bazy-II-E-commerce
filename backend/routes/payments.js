@@ -7,7 +7,8 @@ const {
 	getPaymentById,
 	addPayment,
 	updatePayment,
-	deletePayment
+	deletePayment,
+	payForOrder
 } = require('../controllers/payments.controller');
 
 const router = express.Router();
@@ -19,6 +20,8 @@ router.get('/', getAllPayments);
 router.get('/:_id', getPaymentById);
 
 router.post('/', addPayment);
+
+router.patch('/:_id', payForOrder);
 
 router.put('/:_id', updatePayment);
 

@@ -1,0 +1,58 @@
+
+
+1. Logowanie i rejestrowanie użytkowników
+2. Dodawanie ulubionych produktów przez użytkownika
+3. Aktualizowanie danych użytkownika (w tym avataru)
+4. Dodawanie i aktualizowanie produktów
+5. Sprzedaż produktów
+6. Wyświetlanie listy produktów
+7. Wyświetlanie paczek produktów 
+8. Losowanie produktu z paczki (drop system)
+9. Dodawanie środków na koncie
+10. Śledzenie płatności za zakupione produkty
+11. Wyświetlanie przez użytkownika historii zakupów
+12. Wyświetlanie ostatnich wpłat na konto
+13. Wyświetlanie listy posiadanych przedmiotów
+14. Wyświetlanie listy otworzonych paczek
+15. Dodanie roli administratora
+
+
+
+
+# BazyII-project
+Projekt sklepu internetowego, polegający na zasadzie iż sprzedającym jest nie tylko sklep ale i użytkownik sklepu. Sklep oferuje możliwość wylosowania (drop) przedmiotu o losowej kwocie z wybranej przez klienta paczki. Każda taka paczka kosztuje określoną ilość pieniędzy, którą użytkownik jest w stanie wymienić na losowy przedmiot oferowany przez nasz sklep. Po wylosowaniu takiego przedmiotu jest on przypisywany do przedmiotów użytkownika, a następnie użytkownik w dowolnym momencie może zdecydować czy taki przedmiot chce otrzymać czy wystawić na sprzedaż dla innych użytkowników.
+Saldo użytkownika może zostać w każdym momencie powiększone poprzez system doładowywania środków.
+Użytkownik jest w stanie dodawać produkty do ulubionych oraz śledzić swoje transakcje oraz ostatnie doładowania salda. 
+
+# Funkcjonalności
+  * Logowanie i rejestrowanie użytkowników
+  * Dodawanie ulubionych produktów przez użytkownika
+  * Aktualizowanie danych użytkownika (w tym avataru)
+  * Dodawanie i aktualizowanie produktów
+  * Sprzedaż produktów
+  * Wyświetlanie listy produktów
+  * Wyświetlanie paczek produktów 
+  * Losowanie produktu z paczki (drop system)
+  * Dodawanie środków na koncie
+  * Śledzenie płatności za zakupione produkty
+  * Wyświetlanie przez użytkownika historii zakupów
+  * Wyświetlanie ostatnich wpłat na konto
+  * Wyświetlanie listy posiadanych przedmiotów
+  * Wyświetlanie listy otworzonych paczek
+  * Dodanie roli administratora
+
+# Swagger
+W celu lepszego zobrazowania funkcjonalności oraz wystawionych endpointów udostępniamy swagger, który można przekopiować na stronie https://editor.swagger.io/
+i przeanalizować.
+ ### Swagger 
+
+# Authors
+- Paweł Motyka
+- Hubert Gancarczyk 
+
+# Technologie 
+- MongoDB
+- Moongose 
+- ReactJs
+- Express
+- Mantine

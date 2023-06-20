@@ -19,7 +19,11 @@ const paymentSchema = new Schema({
 	status: {
 		type: String,
 		default: 'completed',
-		enum: ['completed', 'failed']
+		enum: ['completed', 'pending', 'failed']
+	},
+	orderId: {
+		type: Schema.Types.ObjectId,
+		ref: 'Order'
 	}
 });
 
