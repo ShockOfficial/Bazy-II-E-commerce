@@ -1,6 +1,33 @@
 const Order = require('../models/orders.model');
 const mongoose = require('mongoose');
 
+const getOrders = async (req, res) => {
+    try {
+        const orders = await Order.find().populate('items.product');
+        res.status(200).json(orders);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}
+
+const getOrder = async (req, res) => {
+    const { _id } = req.params;
+    const {
+		user: { _id: userId, role }
+    } = req;
+
+    try {
+        if (!(_id.toString() === userId.toString() || role === 'admin')) {
+            return res.status(403).json({ error: 'Forbidden' });
+        }
+
+        const orders = await Order.find({ user: userId }).populate('items.product');
+        res.status(200).json(orders);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}
+
 const addOrder = async (req, res) => {
     const { user } = req;
     const { items } = req.body;
@@ -73,5 +100,7 @@ const addOrder = async (req, res) => {
 };
 
 module.exports = {
-	addOrder
+    addOrder,
+    getOrders,
+    getOrder
 };
