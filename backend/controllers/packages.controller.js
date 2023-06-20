@@ -79,6 +79,16 @@ const createPackage = async (req, res) => {
 			items: []
 		};
 
+		for (const product of items) {
+			const existingProduct = existingProducts.find(
+				(ex_product) => ex_product._id.toString() === product.productId
+			);
+			packageData.items.push({
+				productId: existingProduct._id,
+				probability: product.propability
+			});
+		}
+
 		const newPackage = await Package.create(packageData);
 		res.status(200).json(newPackage);
 	} catch (error) {
