@@ -35,22 +35,27 @@ const createProduct = async (req, res) => {
 
 const removeFromSale = async (req, res) => {
 	const { user } = req;
-	const { productId } = req.body;
+	const { _id: productId } = req.params;
 
 	try {
 		if (!mongoose.Types.ObjectId.isValid(productId)) {
 			return res.status(404).json({ error: 'There is no such product' });
 		}
-		
+
 		const product = await Product.findOne({ _id: productId });
 		// Could use findOneAndDelete() instead, but if we want give access for admin to delete users sales there must be if statement to check if we are the user who created the sale or if we are an admin.
-		
+
 		if (!product) {
 			return res.status(400).json({ error: 'There is no such product' });
 		}
 
-		if (user.role === "user" && !product.userId.toString() === user._id.toString()) {
-			return res.status(404).json({ error: 'There is no such product created by the user' });
+		if (
+			user.role === 'user' &&
+			!product.userId.toString() === user._id.toString()
+		) {
+			return res
+				.status(404)
+				.json({ error: 'There is no such product created by the user' });
 		}
 
 		const deletedDocument = await Product.deleteOne({ _id: productId });
@@ -59,7 +64,7 @@ const removeFromSale = async (req, res) => {
 	} catch (error) {
 		res.status(500).json({ error: error.message });
 	}
-}
+};
 
 const sellProducts = async (req, res) => {
 	const { user } = req;
@@ -70,14 +75,21 @@ const sellProducts = async (req, res) => {
 			return res.status(404).json({ error: 'There is no such product' });
 		}
 
-		const alreadyExist = await Product.findOne({ userProductId: productId }) == null ? false : true;
+		const alreadyExist =
+			(await Product.findOne({ userProductId: productId })) == null
+				? false
+				: true;
 		if (alreadyExist) {
 			return res.status(409).json({ error: 'Product already exists' });
 		}
 
-		const index = user.products.findIndex((product) => product._id.toString() === productId);
+		const index = user.products.findIndex(
+			(product) => product._id.toString() === productId
+		);
 		if (index === -1) {
-			return res.status(404).json({ error: 'There is no such product in user inventory' });
+			return res
+				.status(404)
+				.json({ error: 'There is no such product in user inventory' });
 		}
 
 		if (user.products[index].quantity < quantity) {
@@ -85,13 +97,20 @@ const sellProducts = async (req, res) => {
 		}
 
 		const product = await Product.findById(user.products[index].productId);
-		const newProduct = await Product.create({ ...product._doc, unitsInStock: quantity, price: price, userId: user._id, userProductId: user.products[index]._id, _id: new mongoose.Types.ObjectId() });
+		const newProduct = await Product.create({
+			...product._doc,
+			unitsInStock: quantity,
+			price: price,
+			userId: user._id,
+			userProductId: user.products[index]._id,
+			_id: new mongoose.Types.ObjectId()
+		});
 
 		res.status(200).json({ product: newProduct });
 	} catch (error) {
 		res.status(500).json({ error: error.message });
 	}
-}
+};
 
 const updateSaleParameters = async (req, res) => {
 	const { user } = req;
@@ -101,12 +120,16 @@ const updateSaleParameters = async (req, res) => {
 		if (!mongoose.Types.ObjectId.isValid(_id)) {
 			return res.status(404).json({ error: 'There is no such product' });
 		}
-		
+
 		const product = await Product.findOne({ _id: _id });
 
-		const index = user.products.findIndex((prod) => prod._id.toString() === product.userProductId.toString());
+		const index = user.products.findIndex(
+			(prod) => prod._id.toString() === product.userProductId.toString()
+		);
 		if (index === -1) {
-			return res.status(404).json({ error: 'There is no such product in user inventory' });
+			return res
+				.status(404)
+				.json({ error: 'There is no such product in user inventory' });
 		}
 
 		if (user.products[index].quantity < quantity) {
@@ -123,7 +146,7 @@ const updateSaleParameters = async (req, res) => {
 	} catch (error) {
 		res.status(500).json({ error: error.message });
 	}
-}
+};
 
 const updateProduct = async (req, res) => {
 	const { _id } = req.params;
@@ -132,9 +155,12 @@ const updateProduct = async (req, res) => {
 		return res.status(404).json({ error: 'There is no such product' });
 	}
 
-	const product = await Product.findOneAndUpdate({ _id: _id }, {
-		...req.body
-	});
+	const product = await Product.findOneAndUpdate(
+		{ _id: _id },
+		{
+			...req.body
+		}
+	);
 
 	if (!product) {
 		res.status(400).json({ error: 'Thre is no such product' });
@@ -152,28 +178,40 @@ const buyProducts = async (req, res) => {
 
 	try {
 		const productsIds = products.map((product) => product.product._id);
-		const foundProducts = await Product.find({ _id: { $in: productsIds } }).session(session);
+		const foundProducts = await Product.find({
+			_id: { $in: productsIds }
+		}).session(session);
 
 		const totalPrice = foundProducts.reduce((total, product) => {
-			const boughtProduct = products.find((prod) => prod.product._id.toString() === product._id.toString());
+			const boughtProduct = products.find(
+				(prod) => prod.product._id.toString() === product._id.toString()
+			);
 			if (product.unitsInStock < boughtProduct.quantity) {
-				return res.status(400).json({ error: `Not enough quantity of the product: ${product.name}` });
+				return res
+					.status(400)
+					.json({
+						error: `Not enough quantity of the product: ${product.name}`
+					});
 			}
 
 			return total + product.price * boughtProduct.quantity;
 		}, 0);
 
 		if (buyer.money < totalPrice) {
-			return res.status(400).json({ error: 'Insufficient funds'})
+			return res.status(400).json({ error: 'Insufficient funds' });
 		}
 
 		const updates = foundProducts.map(async (product) => {
-			const boughtProduct = products.find((prod) => prod.product._id.toString() === product._id.toString());
+			const boughtProduct = products.find(
+				(prod) => prod.product._id.toString() === product._id.toString()
+			);
 			let id = product._id;
 
 			if (product.userId != null) {
 				const seller = await User.findById(product.userId).session(session);
-				const soldItem = seller.products.find((item) => item._id.toString() === product.userProductId.toString());
+				const soldItem = seller.products.find(
+					(item) => item._id.toString() === product.userProductId.toString()
+				);
 				id = soldItem.productId;
 
 				if (soldItem) {
@@ -187,12 +225,16 @@ const buyProducts = async (req, res) => {
 				await seller.save();
 			}
 
-			const existingItem = buyer.products.find((item) => item.productId.toString() === id.toString());
+			const existingItem = buyer.products.find(
+				(item) => item.productId.toString() === id.toString()
+			);
 			if (existingItem) {
 				existingItem.quantity += boughtProduct.quantity;
-			}
-			else {
-				buyer.products.push({ productId: id, quantity: boughtProduct.quantity });
+			} else {
+				buyer.products.push({
+					productId: id,
+					quantity: boughtProduct.quantity
+				});
 			}
 
 			product.unitsInStock -= boughtProduct.quantity;
