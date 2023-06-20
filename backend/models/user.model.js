@@ -65,7 +65,31 @@ const userSchema = new Schema({
 				required: true
 			}
 		}
-	]
+	],
+	orderInfo: {
+		shippingAddress: {
+			street: {
+				type: String,
+				default: null
+			},
+			city: {
+				type: String,
+				default: null
+			},
+			postalCode: {
+				type: String,
+				default: null
+			},
+			country: {
+				type: String,
+				default: null
+			}
+		},
+		contactNumber: {
+			type: String,
+			default: null
+		}
+	}
 });
 
 userSchema.statics.signup = async function (email, password) {

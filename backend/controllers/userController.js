@@ -76,9 +76,62 @@ const changeRole = async (req, res) => {
 	}
 };
 
+const updateOrderInfo = async (req, res) => {
+	const { user } = req;
+	const { street, city, postalCode, country, contactNumber } = req.body;
+
+	try {
+		user.orderInfo.shippingAddress.street = street || user.orderInfo.shippingAddress.street;
+		user.orderInfo.shippingAddress.city = city || user.orderInfo.shippingAddress.city;
+		user.orderInfo.shippingAddress.postalCode = postalCode || user.orderInfo.shippingAddress.postalCode;
+		user.orderInfo.shippingAddress.country = country || user.orderInfo.shippingAddress.country;
+		user.orderInfo.contactNumber = contactNumber || user.orderInfo.contactNumber;
+
+		await user.save();
+
+		res.status(200).json({ message: 'Order info updated successfully' });
+	} catch (error) {
+		res.status(500).json({ error: error.message });
+	}
+};
+
+const getUserProducts = async (req, res) => {
+	const { _id } = req.params;
+    const {
+		user: { _id: userId, role }
+    } = req;
+
+    try {
+        if (!(_id.toString() === userId.toString() || role === 'admin')) {
+            return res.status(403).json({ error: 'Forbidden' });
+		}
+		
+		const user = await User.findById(userId).populate('products.productId');
+		if (!user) {
+			return res.status(404).json({ error: 'User not found' });
+		}
+
+        res.status(200).json(user.products);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}
+
+const getUsers = async (req, res) => {
+	try {
+		const users = await User.find();
+		res.status(200).json(users);
+	} catch (error) {
+		res.status(500).json({ error: error.message });
+	}
+}
+
 module.exports = {
 	loginUser,
 	signupUser,
 	updateUser,
-	changeRole
+	changeRole,
+	updateOrderInfo,
+	getUserProducts,
+	getUsers
 };

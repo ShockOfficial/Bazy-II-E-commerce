@@ -171,6 +171,7 @@ const getRandomItem = async (req, res) => {
 			user.products[drawItemIndex].quantity += 1;
 		}
 
+		user.money -= package.cost;
 		await user.save();
 
 		res.status(200).json({ _id: drawItem.productId._id });
