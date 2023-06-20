@@ -12,8 +12,8 @@ const addToFavourites = async (req, res) => {
 };
 
 const removeFromFavourites = async (req, res) => {
-	const { productId } = req.body;
 	const { user } = req;
+	const { _id: productId } = req.params;
 
 	try {
 		const updatedUser = await User.removeFromFavourites(user._id, productId);

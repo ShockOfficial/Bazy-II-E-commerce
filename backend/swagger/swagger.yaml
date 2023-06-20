@@ -1,8 +1,8 @@
 swagger: '2.0'
 info:
-  title: Backend API
+  title: ECB Project
   version: 1.0.0
-host: your-hostname.com
+host: no-hosting.com
 basePath: /
 schemes:
   - https
@@ -10,6 +10,8 @@ paths:
   /users/login:
     post:
       summary: User Login
+      tags:
+        - Users
       consumes:
         - application/json
       produces:
@@ -59,6 +61,8 @@ paths:
   /users/signup:
     post:
       summary: User Signup
+      tags:
+        - Users
       consumes:
         - application/json
       produces:
@@ -106,6 +110,8 @@ paths:
   /users/update:
     put:
       summary: Update User Profile
+      tags:
+        - Users
       consumes:
         - application/json
       produces:
@@ -162,6 +168,8 @@ paths:
   /users/favourites:
     get:
       summary: Get User's Favourite Products
+      tags:
+        - Users
       produces:
         - application/json
       responses:
@@ -209,7 +217,7 @@ paths:
                   type: string
                 quantity:
                   type: number
-              
+
         '401':
           description: Unauthorized
         '404':
@@ -217,6 +225,8 @@ paths:
   /users/favourites/add:
     post:
       summary: Add Product to Favourites
+      tags:
+        - Users
       consumes:
         - application/json
       produces:
@@ -261,22 +271,20 @@ paths:
           description: Unauthorized
         '404':
           description: User not found or Product not found in favourites
-  /users/favourites/remove:
-    post:
+  /users/favourites/:{_id}:
+    delete:
       summary: Remove Product from Favourites
+      tags:
+        - Users
       consumes:
         - application/json
       produces:
         - application/json
       parameters:
-        - name: body
-          in: body
+        - name: _id
+          in: path
           required: true
-          schema:
-            type: object
-            properties:
-              productId:
-                type: string
+          type: string
       responses:
         '200':
           description: Product removed from favourites successfully
@@ -308,9 +316,65 @@ paths:
           description: Unauthorized
         '404':
           description: User not found or Product not found in favourites
+  /users/get-products/:{_id}:
+    get:
+      summary: Get User's Products
+      tags:
+        - Users
+      produces:
+        - application/json
+      parameters:
+        - name: _id
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: User's products fetched successfully
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                _id:
+                  type: string
+                name:
+                  type: string
+                description:
+                  type: string
+                price:
+                  type: number
+                category:
+                  type: string
+                brand:
+                  type: string
+                imageUrls:
+                  type: array
+                  items:
+                    type: string
+                rating:
+                  type: number
+                reviewsNumber:
+                  type: number
+                unitsInStock:
+                  type: number
+                createdAt:
+                  type: string
+                  format: date-time
+                updatedAt:
+                  type: string
+                  format: date-time
+                __v:
+                  type: number
+        '401':
+          description: Unauthorized
+        '404':
+          description: User not found
   /users/change-role:
     patch:
       summary: Change User Role (Admin Only)
+      tags:
+        - Users
       consumes:
         - application/json
       produces:
@@ -357,3 +421,640 @@ paths:
           description: Unauthorized
         '404':
           description: User not found
+
+  /products:
+    get:
+      summary: Get all products
+      tags:
+        - Products
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Product'
+    post:
+      summary: Create a new product
+      tags:
+        - Products
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Product'
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Product'
+
+  /products/{_id}:
+    get:
+      summary: Get a product by ID
+      tags:
+        - Products
+      parameters:
+        - name: _id
+          in: path
+          required: true
+          description: ID of the product
+          type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Product'
+        '400':
+          description: Invalid product ID
+        '404':
+          description: Product not found
+    patch:
+      summary: Update a product
+      tags:
+        - Products
+      parameters:
+        - name: _id
+          in: path
+          required: true
+          description: ID of the product
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Product'
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Product'
+
+  /products/buy-products:
+    post:
+      summary: Buy products
+      tags:
+        - Products
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/BuyProductsRequest'
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Product'
+
+  /products/sell-products:
+    post:
+      summary: Sell products
+      tags:
+        - Products
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/SellProductRequest'
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/SellProductResponse'
+    patch:
+      summary: Update sale parameters
+      tags:
+        - Products
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/UpdateSaleRequest'
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Product'
+
+  /products/remove-from-sale:
+    delete:
+      summary: Remove product from sale
+      tags:
+        - Products
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/RemoveFromSaleRequest'
+      responses:
+        '200':
+          description: Successful operation
+  /packages:
+    get:
+      summary: Get all packages
+      tags:
+        - Packages
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Package'
+    post:
+      summary: Create a new package
+      tags:
+        - Packages
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Package'
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Package'
+
+  /packages/{_id}:
+    get:
+      summary: Get a package by ID
+      tags:
+        - Packages
+      parameters:
+        - name: _id
+          in: path
+          required: true
+          description: ID of the package
+          type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Package'
+        '400':
+          description: Invalid package ID
+        '404':
+          description: Package not found
+    patch:
+      summary: Update a package
+      tags:
+        - Packages
+      parameters:
+        - name: _id
+          in: path
+          required: true
+          description: ID of the package
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Package'
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Package'
+
+  /packages/draw-item:
+    post:
+      summary: Draw an item from a package
+      tags:
+        - Packages
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/DrawItemRequest'
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/DrawItemResponse'
+
+  /payments:
+    get:
+      summary: Get all payments
+      tags:
+        - Payments
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Payment'
+    post:
+      summary: Create a new payment
+      tags:
+        - Payments
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/CreatePayment'
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Payment'
+
+  /payments/{_id}:
+    get:
+      summary: Get a payment by ID
+      tags:
+        - Payments
+      parameters:
+        - name: _id
+          in: path
+          required: true
+          description: ID of the payment
+          type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Payment'
+        '400':
+          description: Invalid payment ID
+        '404':
+          description: Payment not found
+    patch:
+      summary: Update a payment
+      tags:
+        - Payments
+      parameters:
+        - name: _id
+          in: path
+          required: true
+          description: ID of the order
+          type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Payment'
+    put:
+      summary: Update a payment
+      tags:
+        - Payments
+      parameters:
+        - name: _id
+          in: path
+          required: true
+          description: ID of the payment
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/CreatePayment'
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Payment'
+    delete:
+      summary: Delete a payment
+      tags:
+        - Payments
+      parameters:
+        - name: _id
+          in: path
+          required: true
+          description: ID of the payment
+          type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Payment'
+  /orders:
+    get:
+      summary: Get all orders
+      tags:
+        - Orders
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Order'
+    post:
+      summary: Create a new order
+      tags:
+        - Orders
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Order'
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Order'
+
+  /orders/{_id}:
+    get:
+      summary: Get an order by ID
+      tags:
+        - Orders
+      parameters:
+        - name: _id
+          in: path
+          required: true
+          description: ID of the order
+          type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Order'
+        '400':
+          description: Invalid order ID
+        '404':
+          description: Order not found
+
+definitions:
+  Product:
+    type: object
+    properties:
+      name:
+        type: string
+        required:
+          - name
+      description:
+        type: string
+        required:
+          - description
+      price:
+        type: number
+        required:
+          - price
+      category:
+        type: string
+        required:
+          - category
+      brand:
+        type: string
+        required:
+          - brand
+      imageUrls:
+        type: array
+        items:
+          type: string
+        required:
+          - imageUrls
+      rating:
+        type: number
+        default: 0
+      reviewsNumber:
+        type: number
+        default: 0
+      unitsInStock:
+        type: number
+        required:
+          - unitsInStock
+      userId:
+        type: string
+        format: ObjectId
+        description: ID of the user who owns the product
+      userProductId:
+        type: string
+        format: ObjectId
+        description: ID of the user's product
+
+  Package:
+    type: object
+    properties:
+      name:
+        type: string
+        required:
+          - name
+      description:
+        type: string
+        required:
+          - description
+      price:
+        type: number
+        required:
+          - price
+      category:
+        type: string
+        required:
+          - category
+      brand:
+        type: string
+        required:
+          - brand
+      imageUrls:
+        type: array
+        items:
+          type: string
+        required:
+          - imageUrls
+      rating:
+        type: number
+        default: 0
+      reviewsNumber:
+        type: number
+        default: 0
+      unitsInStock:
+        type: number
+        required:
+          - unitsInStock
+      userId:
+        type: string
+        format: ObjectId
+        description: ID of the user who owns the product
+      userProductId:
+        type: string
+        format: ObjectId
+        description: ID of the user's product
+
+  Order:
+    type: object
+    properties:
+      user:
+        type: object
+        properties:
+          userId:
+            type: string
+            format: ObjectId
+            description: ID of the user who owns the order
+          name:
+            type: string
+            description: Name of the user
+          email:
+            type: string
+            description: Email of the user
+      items:
+        type: array
+        items:
+          type: object
+          properties:
+            productId:
+              type: string
+              format: ObjectId
+              description: ID of the product
+            quantity:
+              type: number
+              description: Quantity of the product
+      status:
+        type: string
+        description: Status of the order
+        enum:
+          - pending
+          - processing
+          - shipped
+          - delivered
+          - cancelled
+      paymentId:
+        type: string
+        format: ObjectId
+        description: ID of the payment
+      shippingAddress:
+        type: object
+        properties:
+          address:
+            type: string
+            description: Address of the order
+          city:
+            type: string
+            description: City of the order
+          postalCode:
+            type: string
+            description: Postal code of the order
+          country:
+            type: string
+            description: Country of the order
+      contactNumber:
+        type: string
+        description: Contact number of the order
+
+  DrawItemRequest:
+    type: object
+    properties:
+      packageId:
+        type: string
+        format: ObjectId
+        description: ID of the package
+      userId:
+        type: string
+        format: ObjectId
+        description: ID of the user who owns the package
+
+  DrawItemResponse:
+    type: object
+    properties:
+      item:
+        type: string
+        description: ID of the item drawn from the package
+
+  BuyProductsRequest:
+    type: array
+    items:
+      type: object
+      properties:
+        productId:
+          type: string
+        quantity:
+          type: number
+
+  SellProductRequest:
+    type: array
+    items:
+      type: object
+      properties:
+        productId:
+          type: string
+        quantity:
+          type: number
+        salePrice:
+          type: number
+
+  SellProductResponse:
+    type: object
+    properties:
+      product:
+        type: string
+
+  UpdateSaleRequest:
+    type: object
+    properties:
+      price:
+        type: number
+      quantity:
+        type: number
+      _id:
+        type: string
+
+  RemoveFromSaleRequest:
+    type: object
+    properties:
+      productId:
+        type: string
+
+  Payment:
+    type: object
+    properties:
+      userId:
+        type: string
+        format: ObjectId
+        description: ID of the user who made the payment
+      amount:
+        type: number
+      status:
+        type: string
+        enum:
+          - Pending
+          - Completed
+          - Failed
+      orderId:
+        type: string
+        format: ObjectId
+        description: ID of the order
+
+      createdAt:
+        type: string
+        format: date-time
+      updatedAt:
+        type: string
+        format: date-time
+      _id:
+        type: string
+        format: ObjectId
+
+  CreatePayment:
+    type: object
+    properties:
+      userId:
+        type: string
+        format: ObjectId
+        description: ID of the user who made the payment
+      amount:
+        type: number
+      status:
+        type: string
+        enum:
+          - Pending
+          - Completed
+          - Failed
+      orderId:
+        type: string
+        format: ObjectId
+        description: ID of the order
