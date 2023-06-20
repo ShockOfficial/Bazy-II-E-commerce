@@ -76,9 +76,29 @@ const changeRole = async (req, res) => {
 	}
 };
 
+const updateOrderInfo = async (req, res) => {
+	const { user } = req;
+	const { street, city, postalCode, country, contactNumber } = req.body;
+
+	try {
+		user.orderInfo.shippingAddress.street = street || user.orderInfo.shippingAddress.street;
+		user.orderInfo.shippingAddress.city = city || user.orderInfo.shippingAddress.city;
+		user.orderInfo.shippingAddress.postalCode = postalCode || user.orderInfo.shippingAddress.postalCode;
+		user.orderInfo.shippingAddress.country = country || user.orderInfo.shippingAddress.country;
+		user.orderInfo.contactNumber = contactNumber || user.orderInfo.contactNumber;
+
+		await user.save();
+
+		res.status(200).json({ message: 'Order info updated successfully' });
+	} catch (error) {
+		res.status(500).json({ error: error.message });
+	}
+};
+
 module.exports = {
 	loginUser,
 	signupUser,
 	updateUser,
-	changeRole
+	changeRole,
+	updateOrderInfo
 };

@@ -7,7 +7,8 @@ const {
 	loginUser,
 	signupUser,
 	updateUser,
-	changeRole
+	changeRole,
+	updateOrderInfo
 } = require('../controllers/userController');
 
 const {
@@ -29,6 +30,7 @@ router.put('/update', updateUser);
 router.get('/favourites', getFavourites);
 router.post('/favourites/add', addToFavourites);
 router.post('/favourites/remove', removeFromFavourites);
+router.patch('/update-order-info', updateOrderInfo);
 
 router.use(rolePermissions(["admin"]));
 router.patch('/change-role', changeRole);
