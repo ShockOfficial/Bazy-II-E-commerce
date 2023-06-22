@@ -3,6 +3,9 @@ Projekt sklepu internetowego, polegający na zasadzie iż sprzedającym jest nie
 Saldo użytkownika może zostać w każdym momencie powiększone poprzez system doładowywania środków.
 Użytkownik jest w stanie dodawać produkty do ulubionych oraz śledzić swoje transakcje oraz ostatnie doładowania salda. 
 
+## Dokumentacja
+Dokumentację umieszamy w root katalogu naszego repozytorium. Można ją również znaleźc [klikająć tutaj](https://github.com/ShockOfficial/Bazy-II-E-commerce/blob/main/Dokumentacja%20ECB.pdf)
+
 ## Authors
 - Paweł Motyka
 - Hubert Gancarczyk 
